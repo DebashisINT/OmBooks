@@ -335,16 +335,19 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
         }
         permList = (permList + permListDenied).toMutableList()
 
+        //Suman 05-11-2024 mantis id 27784 begin
+/*
         for (i in 0..permList.size - 1) {
             // 1.0 SplashActivity AppV 4.0.7 Timber Log Implementation
 //            XLog.d("Permission Name"+permList.get(i).permissionName + " Status : Granted")
-            Timber.d("Permission Name" + permList.get(i).permissionName + " Status : Granted")
+            //Timber.d("Permission Name" + permList.get(i).permissionName + " Status : Granted")
         }
         for (i in 0..permListDenied.size - 1) {
             // 1.0 SplashActivity AppV 4.0.7 Timber Log Implementation
 //            XLog.d("Permission Name"+permListDenied.get(i).permissionName + " Status : Denied")
-            Timber.d("Permission Name" + permListDenied.get(i).permissionName + " Status : Denied")
-        }
+            //Timber.d("Permission Name" + permListDenied.get(i).permissionName + " Status : Denied")
+        }*/
+        //Suman 05-11-2024 mantis id 27784 end
     }
 
 
@@ -741,7 +744,7 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
                                 Pref.longitude = location.longitude.toString()
                                 Pref.current_latitude = location.latitude.toString()
                                 Pref.current_longitude = location.longitude.toString()
-                                Timber.d("Splash onNewLocationAvailable ${Pref.latitude} ${Pref.longitude}")
+                                //Timber.d("Splash onNewLocationAvailable ${Pref.latitude} ${Pref.longitude}")
                                 progress_wheel.stopSpinning()
                             }
                         })

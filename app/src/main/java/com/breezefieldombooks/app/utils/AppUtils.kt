@@ -3276,7 +3276,7 @@ class AppUtils {
                         obj.callDateTime = callDateTime
                         obj.callDuration = callDuration
                         phoneCallRecord.add(obj)
-                        Timber.d("Call record fetched ${obj.number} ${obj.callDateTime}")
+                       // Timber.d("Call record fetched ${obj.number} ${obj.callDateTime}")
                     }catch (ex:Exception){
                         ex.printStackTrace()
                     }
@@ -3346,7 +3346,7 @@ class AppUtils {
                         obj.callDateTime = callDateTime
                         obj.callDuration = callDuration
                         phoneCallRecord.add(obj)
-                        Timber.d("Call record fetched ${obj.number} ${obj.callDateTime}")
+                       // Timber.d("Call record fetched ${obj.number} ${obj.callDateTime}")
                     }catch (ex:Exception){
                         ex.printStackTrace()
                     }
@@ -3406,7 +3406,7 @@ class AppUtils {
                         obj.callDateTime = callDateTime
                         obj.callDuration = callDuration
                         phoneCallRecord.add(obj)
-                        Timber.d("Call record fetched ${obj.number} ${obj.callDateTime}")
+                       // Timber.d("Call record fetched ${obj.number} ${obj.callDateTime}")
                     }catch (ex:Exception){
                         ex.printStackTrace()
                         println("tag_time_dt err1 ${ex.message}")
@@ -3442,7 +3442,7 @@ class AppUtils {
                     while (it.moveToNext()) {
                         val groupName = it.getString(it.getColumnIndex(ContactsContract.Groups.TITLE))
                         val groupId = it.getString(it.getColumnIndex(ContactsContract.Groups._ID))
-                        Timber.d("tag_contact_gr $groupName $groupId")
+                       // Timber.d("tag_contact_gr $groupName $groupId")
                         if(!groups.map { it.gr_name }.contains(groupName)){
                             groups.add(ContactGr(groupId,groupName))
                             //println("tag_contact_gr $groupId $groupName")

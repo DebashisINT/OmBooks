@@ -36,7 +36,7 @@ public class MonitorBroadcast extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         try{
-            Timber.e("MONITOR BROADCAST GPS_EVENT_STOPPED: " + "Time : " + AppUtils.Companion.getCurrentDateTime());
+            //Timber.e("MONITOR BROADCAST GPS_EVENT_STOPPED: " + "Time : " + AppUtils.Companion.getCurrentDateTime());
 
             int notiID=intent.getIntExtra("notiId",0);
             String subject=intent.getStringExtra("fuzedLoc");

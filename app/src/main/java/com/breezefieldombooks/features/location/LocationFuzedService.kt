@@ -112,6 +112,7 @@ import kotlin.collections.ArrayList
 // 11.0 SystemEventReceiver AppV 4.1.3 Suman    03/05/2023 Monitor Broadcast update mantis 26011
 // 12.0 LocationFuzedService v 4.1.6 Tufan 11/07/2023 mantis 26546 revisit sync time
 // 13.0 LocationFuzedService v 4.2.6 Suman 08/05/2024 mantis 0027427 location sync update
+// 14.0 LocationFuzedService v 4.2.9 Suman 04/11/2024 mantis id 27785 begin
 class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener,
         OnCompleteListener<Void>, GpsStatus.Listener {
     override fun onComplete(p0: Task<Void>) {
@@ -1159,11 +1160,17 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
         if (Pref.user_id.isNullOrEmpty())
             return*/
 
-
-        syncAudioDataNew()
+        try {
+            if(Pref.IsUserWiseRecordAudioEnableForVisitRevisit){
+                syncAudioDataNew()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
         //cancelShopDuration()
         accuracyStatus = "accurate"
+        Timber.d("tag_loc_srv continueToAccurateFlow")
         continueToAccurateFlow(location)
 
         /*if (mLastLocation == null) {
@@ -1228,7 +1235,7 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
 
                             }
                         }, { error ->
-                            (this as DashboardActivity).showSnackMessage(this.getString(R.string.unable_to_sync))
+                           Timber.d("=Audio sync error= ${error.printStackTrace()}")
 
                         })
                 )
@@ -2945,7 +2952,7 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
     }
 
     fun addLocationData(location: UserLocationDataEntity) {
-
+        Timber.d("tag_loc_srv addLocationData inside")
        /* XLog.d("======Current valid location (Location Fuzed Service)======")
         XLog.d("distance=====> " + location.distance)
         XLog.d("lat====> " + location.latitude + " long=====> " + location.longitude)
@@ -3113,6 +3120,7 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
 
     private fun saveAccurateData(location: UserLocationDataEntity, text: String) {
         try {
+            Timber.d("tag_loc_srv saveAccurateData inside")
             acuurateLat = location.latitude.toDouble()
             acuurateLong = location.longitude.toDouble()
 
@@ -3153,6 +3161,7 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
             }catch (ex:Exception){
                 ex.printStackTrace()
                 Timber.d("error loccc : ${ex.printStackTrace()}")
+                Timber.d("tag_loc_srv err ${ex.printStackTrace()}")
             }
             //end distance correction
 
@@ -3175,6 +3184,7 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
                 ex.printStackTrace()
                 location.distance = "0.0"
                 Timber.d("error loc : ${ex.printStackTrace()}")
+                Timber.d("tag_loc_srv ex1 ${ex.printStackTrace()}")
             }
             //negative distance handle Suman 06-02-2024 mantis id 0027225 end
 
@@ -3185,6 +3195,20 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
             }
             // 13.0 LocationFuzedService v 4.2.6 Suman 08/05/2024 mantis 0027427 location sync update end
 
+            // 14.0 LocationFuzedService v 4.2.9 Suman 04/11/2024 mantis id 27785 begin
+            try {
+                println("tag_loc_insert check existance")
+                var existL = AppDatabase.getDBInstance()!!.userLocationDataDao().getDataIfExist(location.updateDate,location.time) as ArrayList<UserLocationDataEntity>
+                if(existL.size>0){
+                    println("tag_loc_insert check return")
+                    return
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            // 14.0 LocationFuzedService v 4.2.9 Suman 04/11/2024 mantis id 27785 begin
+            println("tag_loc_insert check insert")
+            Timber.d("tag_loc_srv saveAccurateData insert")
             AppDatabase.getDBInstance()!!.userLocationDataDao().insertAll(location) // save accurate data
 //        XLog.d("Shop to shop distance (At accurate loc save time)====> " + Pref.totalS2SDistance)
             Timber.d("Shop to shop distance (At accurate loc save time)====> " + Pref.totalS2SDistance + " "+location.time)
@@ -4254,6 +4278,7 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun updateLocation(mLastLocation: Location, location: Location) {
+        Timber.d("tag_loc_srv updateLocation")
         if (location.latitude == 0.0 || location.longitude == 0.0)
             return
 
@@ -4375,6 +4400,7 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
         } else
             userlocation.home_duration = ""
 
+        Timber.d("tag_loc_srv addLocationData")
         addLocationData(userlocation)
 
         Observable.create<AddShopDBModelEntity> { observable ->
@@ -4639,7 +4665,6 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
         }catch (ex:Exception){
             ex.printStackTrace()
         }
-
         super.onDestroy()
     }
 

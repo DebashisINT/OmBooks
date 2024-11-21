@@ -108,7 +108,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val body = remoteMessage?.data?.get("body")
         val tag = remoteMessage?.data?.get("flag")
 
-        Timber.d("quto_mail FCM class tag ${remoteMessage?.data?.get("type")}")
+       // Timber.d("quto_mail FCM class tag ${remoteMessage?.data?.get("type")}")
 
         val notification = NotificationUtils(getString(R.string.app_name), "", "", "")
 

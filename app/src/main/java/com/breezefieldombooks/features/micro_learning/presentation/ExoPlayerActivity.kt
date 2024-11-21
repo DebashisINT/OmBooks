@@ -98,6 +98,7 @@ class ExoPlayerActivity : AppCompatActivity() {
 
         //val mediaSource = ProgressiveMediaSource.Factory(mediaDataSourceFactory).createMediaSource(Uri.parse(mMicroLearning?.url))
         val mediaSource = ProgressiveMediaSource.Factory(mediaDataSourceFactory).createMediaSource(MediaItem.fromUri(Uri.parse(mMicroLearning?.url)))
+        //val mediaSource = ProgressiveMediaSource.Factory(mediaDataSourceFactory).createMediaSource(MediaItem.fromUri(Uri.parse("https://vimeo.com/1024311777")))
 
         simpleExoPlayer.playWhenReady = mMicroLearning?.play_when_ready!!
         simpleExoPlayer.seekTo(mMicroLearning?.current_window?.toInt()!!, mMicroLearning?.play_back_position?.toLong()!!)

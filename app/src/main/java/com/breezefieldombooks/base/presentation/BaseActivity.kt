@@ -182,7 +182,7 @@ open class BaseActivity : AppCompatActivity(), GpsStatusDetector.GpsStatusDetect
             //Pref.isAddAttendence = false
             //Pref.DayStartMarked = false
             //Pref.DayEndMarked = false
-            Timber.d("MID: 26980 ${Pref.isAutoLogout}")
+           // Timber.d("MID: 26980 ${Pref.isAutoLogout}")
             performLogout()
             //syncShopList()
             //uploadShopRevisitData()

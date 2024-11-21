@@ -50,5 +50,6 @@ enum class FragType {
     TemplateViewFrag,TemplateAddFrag,LeaderBoardFrag,
     OrderListFrag,ProductListFrag,CartListFrag,ViewOrdDtls,ViewNewOrdHistoryFrag,ViewNewOrdHisAllFrag,ActivityDtlsFrag,ViewCrmOpptFrag,AddOpptFrag,MyLearningFragment,SearchLmsFrag,VideoPlayLMS,
     LeaderboardLmsFrag,SearchLmsLearningFrag,SearchLmsKnowledgeFrag,MyLearningAllVideoList,KnowledgeHubAllVideoList,MyPerformanceFrag,NotificationLMSFragment,LmsQuestionAnswerSet,MyLearningVideoPlay,MyLearningTopicList,
-    BookmarkFrag,BookmarkPlayFrag,PerformanceInsightPage,MyTopicsWiseContents,AllTopicsWiseContents,RetryIncorrectQuizFrag
+    BookmarkFrag,BookmarkPlayFrag,PerformanceInsightPage,MyTopicsWiseContents,AllTopicsWiseContents,RetryIncorrectQuizFrag,RetryPlayFrag,RetryQuestionFrag,InCorrectQuesAnsFrag,CorrectQuesAnsFrag,
+    TargetVSAchvFrag,TargetVSAchvDetlsFrag,
 }

@@ -17,7 +17,7 @@
     <!--Map Key-->
     <!--<string name="MAP_ProjectAPIKey">AIzaSyBRrqsLZFqThqM8uxw_k94pZMbv3-3h0dM</string>-->
     <!--<string name="MAP_ProjectAPIKey" translatable="false">AIzaSyCbYMZjnt8T6yivYfIa4_R9oy-L3SIYyrQ</string>-->
-    <string name="MAP_ProjectAPIKey" translatable="false">AIzaSyDbsL6dMddy2DsjsVzhr_qJe-jWoBLcdLo</string>
+    <string name="MAP_ProjectAPIKey" translatable="false">AIzaSyDk90zSrkVlJS8ysL5i-a2dKbCVin6wlvY</string>
     <string name="facebook_app_id" translatable="false">260734547001450</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb260734547001450</string>
 
@@ -1644,4 +1644,12 @@
     <string name="voter_registration" translatable="false">Voter Registration</string>
     <string name="pan_registration" translatable="false">Pan Registration</string>
     <string name="reg_net_disconnected" translatable="false">Internet is disconnected, you cannot Register, please switch on the internet</string>
+    <!--
+    <string name="retry_now" translatable="false"><u>Retry</u></string>
+-->
+    <!--    <string name="acra_toast_text" translatable="false">Opps!Crash</string>
+    <string name="acra_dialog_title" translatable="false">Crash Popup</string>
+    <string name="acra_dialog_message" translatable="false">Opps!Crash</string>
+    <string name="acra_dialog_positive_button" translatable="false">Ok</string>
+    <string name="acra_dialog_negative_button" translatable="false">Cancel</string>-->
 </resources>

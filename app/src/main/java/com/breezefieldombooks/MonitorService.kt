@@ -83,10 +83,10 @@ class MonitorService:Service() {
 
     fun serviceStatusActionable() {
 
-        Timber.d("MonitorService running : Time :" + AppUtils.getCurrentDateTime())
+       // Timber.d("MonitorService running : Time :" + AppUtils.getCurrentDateTime())
         try {
             if (FTStorageUtils.isMyServiceRunning(LocationFuzedService::class.java, this)) {
-                Timber.d("MonitorService loc service check service running : Time :" + AppUtils.getCurrentDateTime())
+              //  Timber.d("MonitorService loc service check service running : Time :" + AppUtils.getCurrentDateTime())
             }else{
                 Timber.d("MonitorService loc service check service not running : Time :" + AppUtils.getCurrentDateTime())
                 Timber.d("restarting loc service")
@@ -115,7 +115,7 @@ class MonitorService:Service() {
                 powerMode = "Power Save Mode ON"
 
                 Log.e("pww", "Power Save Mode ON")
-                Timber.d("pww : Power Save Mode ON" + " Time :" + AppUtils.getCurrentDateTime())
+                //Timber.d("pww : Power Save Mode ON" + " Time :" + AppUtils.getCurrentDateTime())
 
                 Handler(Looper.getMainLooper()).postDelayed({
                     if (Pref.GPSAlertGlobal) {
@@ -136,7 +136,7 @@ class MonitorService:Service() {
                 //sendGPSOffBroadcast()
             } else {
                 //Log.e("pww", "Power Save Mode OFF" )
-                //Timber.d("pww : Power Save Mode OFF" + " Time :" + AppUtils.getCurrentDateTime())
+                Timber.d("pww : Power Save Mode OFF" + " Time :" + AppUtils.getCurrentDateTime())
                 Pref.PowerSaverStatus = "Off"
                 if (powerSaver) {
                     calculategpsStatus(true)
@@ -179,8 +179,8 @@ class MonitorService:Service() {
                 if (!FTStorageUtils.isMyServiceRunning(LocationFuzedService::class.java, this)) {
                     restartLocationService()
                 }
-                Timber.d("MonitorService LocationFuzedService : " + "false" + "," + " Time :" + AppUtils.getCurrentDateTime())
-                Timber.d("MonitorService  Power Save Mode Status : " + powerMode + "," + " Time :" + AppUtils.getCurrentDateTime())
+                //Timber.d("MonitorService LocationFuzedService : " + "false" + "," + " Time :" + AppUtils.getCurrentDateTime())
+                //Timber.d("MonitorService  Power Save Mode Status : " + powerMode + "," + " Time :" + AppUtils.getCurrentDateTime())
                 Timber.d("Monitor Service Stopped" + "" + "," + " Time :" + AppUtils.getCurrentDateTime())
                 if (!isFirst) {
                     Log.e("abc", "abc stoptimer")
@@ -203,7 +203,7 @@ class MonitorService:Service() {
 
                 println("pww - Power Save Mode ON xm")
                 Log.e("pww", "Power Save Mode ON xm")
-                Timber.d("pww : Power Save Mode ON xm" + " Time :" + AppUtils.getCurrentDateTime())
+              //  Timber.d("pww : Power Save Mode ON xm" + " Time :" + AppUtils.getCurrentDateTime())
 
 
                 powerMode = "Power Save Mode ON"
@@ -239,7 +239,7 @@ class MonitorService:Service() {
 
         if(shouldShopActivityUpdate()){
             if (FTStorageUtils.isMyServiceRunning(LocationFuzedService::class.java, this)) {
-                Timber.d("MonitorService LocationFuzedService : " + "trueee" + "," + " Time :" + AppUtils.getCurrentDateTime())
+               // Timber.d("MonitorService LocationFuzedService : " + "trueee" + "," + " Time :" + AppUtils.getCurrentDateTime())
                 //Timber.d("MonitorService Power Save Mode Status : " + powerMode + "," + " Time :" + AppUtils.getCurrentDateTime())
                 /*if(powerSaver){
                     sendGPSOffBroadcast()
@@ -254,8 +254,8 @@ class MonitorService:Service() {
                     restartLocationService()
                 }
 
-                Timber.d("MonitorService LocationFuzedService : " + "false" + "," + " Time :" + AppUtils.getCurrentDateTime())
-                Timber.d("MonitorService  Power Save Mode Status : " + powerMode + "," + " Time :" + AppUtils.getCurrentDateTime())
+                //Timber.d("MonitorService LocationFuzedService : " + "false" + "," + " Time :" + AppUtils.getCurrentDateTime())
+                //Timber.d("MonitorService  Power Save Mode Status : " + powerMode + "," + " Time :" + AppUtils.getCurrentDateTime())
                 Timber.d("Monitor Service Stopped" + "" + "," + " Time :" + AppUtils.getCurrentDateTime())
                 if(!isFirst){
                     Log.e("abc", "abc stoptimer" )
@@ -285,7 +285,7 @@ class MonitorService:Service() {
 
     fun sendGPSOffBroadcast(){
         if(Pref.user_id.toString().length > 0){
-            Timber.d("MonitorService Called for Battery Broadcast :  Time :" + AppUtils.getCurrentDateTime())
+           // Timber.d("MonitorService Called for Battery Broadcast :  Time :" + AppUtils.getCurrentDateTime())
             //var notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             //notificationManager.cancel(monitorNotiID)
             MonitorBroadcast.isSound=Pref.GPSAlertwithSound
@@ -382,7 +382,7 @@ class MonitorService:Service() {
                 return
             }
             val serviceLauncher = Intent(this, LocationFuzedService::class.java)
-            Timber.d("TAG_CHECK_LOC_SERVICE_STATUS")
+           // Timber.d("TAG_CHECK_LOC_SERVICE_STATUS")
 
             if (Pref.user_id != null && Pref.user_id!!.isNotEmpty()) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

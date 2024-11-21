@@ -83,4 +83,7 @@ interface UserLocationDataDao {
 
     @Query("select * from location_db where updateDate = :date order by locationId desc limit 1")
     fun getLastOfDate(date: String): UserLocationDataEntity
+
+    @Query("select * from location_db where updateDate = :updateDate and time = :time")
+    fun getDataIfExist(updateDate: String,time:String): List<UserLocationDataEntity>
 }

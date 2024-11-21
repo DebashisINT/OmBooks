@@ -26,7 +26,6 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -46,7 +45,6 @@ import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultDataSource
-import com.google.android.exoplayer2.video.VideoSize
 import kotlinx.android.synthetic.main.list_video.view.iv_list_video
 import kotlinx.android.synthetic.main.list_video.view.progress_wheel
 import kotlinx.android.synthetic.main.list_video.view.stylplayerView
@@ -100,6 +98,8 @@ class VideoAdapter(var viewPager2: ViewPager2,
     private lateinit var exoPlayer: ExoPlayer
     private var currentPosition = 0
     private var isQuestionAnswerSetPageLoaded : Boolean = false
+    private var isQuizFragmentLoaded: Boolean = false
+    private var isVideoCompleted: Boolean = false // Flag to track video completion
 
     fun updateCurrentPosition(position: Int) {
         currentPosition = position
@@ -220,26 +220,6 @@ class VideoAdapter(var viewPager2: ViewPager2,
 
             }
 
-            /*  ll_vdo_ply_like.setOnClickListener {
-                  if (like_flag) {
-                      iv_vdo_ply_like.setImageResource(R.drawable.like_white)
-                      like_flag = false
-                      videos.get(position).isLiked = false
-                      videoPreparedListener.onLikeClick(false)
-                  } else {
-                      like_flag = true
-                      iv_vdo_ply_like.setImageResource(R.drawable.heart_red)
-                      videos.get(position).isLiked = true
-                      videoPreparedListener.onLikeClick(true)
-                  }
-
-              }
-
-              if(videos.get(position).*//*isLiked*//* like_flag == true){
-                iv_vdo_ply_like.setImageResource(R.drawable.heart_red)
-            }else{
-                iv_vdo_ply_like.setImageResource(R.drawable.like_white)
-            }*/
 
             ll_vdo_ply_share.setOnClickListener {
                 openShareIntents(videos[position])
@@ -248,11 +228,6 @@ class VideoAdapter(var viewPager2: ViewPager2,
                 videoPreparedListener.onBookmarkClick()
             }
 
-            /*itemView.stylplayerView.setOnClickListener {
-                if (is_portraitTouched == true) {
-                    (context as DashboardActivity).toggleToolbar()
-                }
-            }*/
 
             exo_fullscreen.setOnClickListener {
                 try {
@@ -260,19 +235,13 @@ class VideoAdapter(var viewPager2: ViewPager2,
                         is_portraitTouched = true
                         exo_fullscreen.setBackgroundResource(R.drawable.full_screenfff);
                         (context as Activity).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
-                        //ContextThemeWrapper(context, R.style.AppTheme_NoStatusBar)
                         (context as DashboardActivity).hideToolbar()
-                        //(context as DashboardActivity).statusColorLandScape()
-                        // hide status bar
                         context.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                     } else {
                         exo_fullscreen.setBackgroundResource(R.drawable.switch_to_full_screen_button);
                         (context as Activity).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                         is_portraitTouched = false
-                        //(context as DashboardActivity).showToolbar()
                         (context as DashboardActivity).showToolbar()
-
-                        // Show status bar
                         context.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
                         (context as DashboardActivity).statusColorPortrait()
 
@@ -280,10 +249,7 @@ class VideoAdapter(var viewPager2: ViewPager2,
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-                /*//suman 17-07-2024
-            ll_vdo_ply_cmmnt.setOnClickListener {
-                listner.onCommentCLick(videos[absoluteAdapterPosition])
-            }*/
+
             }
         }
 
@@ -336,40 +302,19 @@ class VideoAdapter(var viewPager2: ViewPager2,
 
             exoPlayer!!.addListener(object : Player.Listener {
 
-                /*override fun onVideoSizeChanged(videoSize: VideoSize) {
-                    super.onVideoSizeChanged(videoSize)
-
-                    // Check if the video is in portrait or landscape mode
-                    val videoWidth = videoSize.width
-                    val videoHeight = videoSize.height
-                    if (videoHeight >= videoWidth) {
-                        // If height is greater than width, it’s portrait
-                        (context as Activity).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-                    } else {
-                        // If width is greater, it's landscape
-                        (context as Activity).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
-                    }
-                }*/
-
                 override fun onPlayerError(error: PlaybackException) {
                     super.onPlayerError(error)
-                    //Toast.makeText(context, "Can't play this video", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, ""+error, Toast.LENGTH_SHORT).show()
+                    println("tag_video_addListener : $error")
+                    println("tag_video_addListener : ${error.message}")
                 }
 
                 @SuppressLint("SuspiciousIndentation")
                 override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
 
-                    /*if (playbackState == PlaybackStateCompat.STATE_FAST_FORWARDING) {
-                        seek_dragging = true
-                        println("tag_puja STATE_FAST_FORWARDING  $seek_dragging")
-                    }
-                    if (playbackState == PlaybackStateCompat.STATE_REWINDING) {
-                        seek_dragging = false
-                        println("tag_puja STATE_FAST_FORWARDING  $seek_dragging")
-                    }*/
-
                     position_ = exoPlayer!!.currentPosition //Returns the playback position in the current content
                     duration = exoPlayer!!.duration //Returns the duration of the current content
+
 
                     onVideoPlaybackStateChangedListener?.onVideoPlaybackStateChanged(exoPlayer!!.currentPosition, exoPlayer!!.duration)
 
@@ -446,7 +391,7 @@ class VideoAdapter(var viewPager2: ViewPager2,
                     when (playbackState) {
 
                         Player.STATE_ENDED -> {
-
+                            isVideoCompleted = true
                             Pref.content_watch_count = Pref.content_watch_count+1
 
                             listner.onEndofVidForCountUpdate()
@@ -490,14 +435,20 @@ class VideoAdapter(var viewPager2: ViewPager2,
                             listner.onContentInfoAPICalling(data_end_LMS_CONTENT_INFO)
 
                             if (Pref.IsVideoAutoPlayInLMS) {
-                                if(Pref.LastVideoPlay_VidPosition.toInt() == absoluteAdapterPosition)
+                                if(Pref.LastVideoPlay_VidPosition.toInt() == absoluteAdapterPosition && CustomStatic.IsQuestionPageOpen == false && CustomStatic.IsHomeClick
+                                    == false)
                                 {
 
-                                   // if (!isQuestionAnswerSetPageLoaded){
-                                        showWatchPointPopup(absoluteAdapterPosition, content_watch_point)
+                                    println("tag_qaprocess 4")
+
+                                        // if (!isQuestionAnswerSetPageLoaded){
+                                        showWatchPointPopup(
+                                            absoluteAdapterPosition,
+                                            content_watch_point
+                                        )
+
                                    // }
                                 }
-
                                /* Handler().postDelayed({
                                     exoPlayer!!.repeatMode = Player.REPEAT_MODE_OFF
                                     exoPlayer!!.seekTo(0)
@@ -507,9 +458,65 @@ class VideoAdapter(var viewPager2: ViewPager2,
                                 if(CustomStatic.IsHomeClick == true){
                                     CustomStatic.IsHomeClick = false
                                 }else{
-                                    if(Pref.LastVideoPlay_VidPosition.toInt() == absoluteAdapterPosition /*&& !isQuestionAnswerSetPageLoaded*/)
-                                        showWatchPointPopup(absoluteAdapterPosition , content_watch_point)
+
+                                    // Check if the video has completed and show the popup
+                                    if (Pref.LastVideoPlay_VidPosition.toInt() == absoluteAdapterPosition && CustomStatic.IsQuestionPageOpen == false ) {
+                                        // Show the popup only if the quiz fragment is not loaded
+                                        println("tag_qaprocess 4")
+
+                                            showWatchPointPopup(absoluteAdapterPosition, content_watch_point)
+
+                                    }
+
                                 }
+                            }
+
+                            try {
+                                val sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                                val contentIdsString = sharedPreferences.getString("saved_content_ids", "")
+                                val savedContentIds = SavedContentIds()
+                                savedContentIds.content_id = contentIdsString!!.split(",").filter { it.isNotEmpty() }.map { it.toInt() }.let { it.toCollection(LinkedHashSet(it)) }
+                                println("seek_dragging"+seek_dragging)
+                                println("contentIdsString"+contentIdsString)
+                                println("question_submit"+LmsQuestionAnswerSet.question_submit)
+                                println("question_submit savedContentIds_content_id"+savedContentIds.content_id)
+
+                                // if (qList.size>0 ) {
+                                println("seek_dragging >>>  "+seek_dragging)
+                                if (exoPlayer!!.playbackParameters.speed != 2.0.toFloat() && !seek_dragging /*&& !LmsQuestionAnswerSet.question_submit*/ ) {
+                                    // if (true) { // test code
+                                    println("qqqqqqq"+savedContentIds.content_id)
+                                    println("question_submit_content_id"+LmsQuestionAnswerSet.question_submit_content_id)
+                                    println("zzzzzzz"+videos.get(absoluteAdapterPosition).content_id)
+                                    // if (!savedContentIds.content_id.contains(videos.get(absoluteAdapterPosition).content_id.toInt()) ) {
+                                    //Pref.videoCompleteCount = (Pref.videoCompleteCount.toString().toInt() + 1).toString()
+                                    if (videos.get(position).question_list!=null && videos.get(position).CompletionStatus==false) {
+                                        // if (true) {// test code
+                                        popupWindow.setOnDismissListener {
+
+                                            //if (videos.get(position).question_list!=null && videos.get(position).question_list.size!=0) {
+                                            try {
+                                                //Pref.content_watch_count =0
+                                                listner.onQuestionAnswerSetPageLoad(videos.get(position).question_list.clone() as ArrayList<QuestionL>, absoluteAdapterPosition )
+
+                                            } catch (e: Exception) {
+                                                e.printStackTrace()
+                                            }
+
+                                            //  }
+                                        }
+                                    }
+                                    /* else{
+
+                                     }*/
+                                }
+                                //   }
+                                // else{
+                                /*if (position == videos.size - 1)
+                                    lastVideoCompleteListener.onLastVideoComplete()*/
+                                //  }
+                            } catch (e: Exception) {
+                                e.printStackTrace()
                             }
 
                         }
@@ -556,7 +563,7 @@ class VideoAdapter(var viewPager2: ViewPager2,
                         // viewPager2.setUserInputEnabled(true);
 
                         //viewPager2.setCurrentItem(viewPager2.currentItem + 1, true)
-                        try {
+                     /*   try {
                             val sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
                             val contentIdsString = sharedPreferences.getString("saved_content_ids", "")
                             val savedContentIds = SavedContentIds()
@@ -568,40 +575,40 @@ class VideoAdapter(var viewPager2: ViewPager2,
 
                             // if (qList.size>0 ) {
                             println("seek_dragging >>>  "+seek_dragging)
-                            if (exoPlayer!!.playbackParameters.speed != 2.0.toFloat() && !seek_dragging /*&& !LmsQuestionAnswerSet.question_submit*/ ) {
-                                if (true) { // test code
+                            if (exoPlayer!!.playbackParameters.speed != 2.0.toFloat() && !seek_dragging *//*&& !LmsQuestionAnswerSet.question_submit*//* ) {
+                               // if (true) { // test code
                                 println("qqqqqqq"+savedContentIds.content_id)
                                 println("question_submit_content_id"+LmsQuestionAnswerSet.question_submit_content_id)
                                 println("zzzzzzz"+videos.get(absoluteAdapterPosition).content_id)
                                 // if (!savedContentIds.content_id.contains(videos.get(absoluteAdapterPosition).content_id.toInt()) ) {
                                 //Pref.videoCompleteCount = (Pref.videoCompleteCount.toString().toInt() + 1).toString()
                                 if (videos.get(position).question_list!=null && videos.get(position).CompletionStatus==false) {
-                                    if (true) {// test code
+                                   // if (true) {// test code
                                     popupWindow.setOnDismissListener {
 
                                         //if (videos.get(position).question_list!=null && videos.get(position).question_list.size!=0) {
                                         try {
-                                            //isQuestionAnswerSetPageLoaded = true
                                             listner.onQuestionAnswerSetPageLoad(videos.get(position).question_list.clone() as ArrayList<QuestionL>, absoluteAdapterPosition)
+                                            return@setOnDismissListener
                                         } catch (e: Exception) {
                                             e.printStackTrace()
                                         }
 
-                                        }
+                                      //  }
                                     }
                                 }
-                                /* else{
+                                *//* else{
 
-                                 }*/
+                                 }*//*
                             }
-                             }
+                          //   }
                             // else{
-                            /*if (position == videos.size - 1)
-                                lastVideoCompleteListener.onLastVideoComplete()*/
+                            *//*if (position == videos.size - 1)
+                                lastVideoCompleteListener.onLastVideoComplete()*//*
                             //  }
                         } catch (e: Exception) {
                             e.printStackTrace()
-                        }
+                        }*/
                     }
                 }
 
@@ -632,8 +639,8 @@ class VideoAdapter(var viewPager2: ViewPager2,
 
             val dataSourceFactory = DefaultDataSource.Factory(context)
 
-            mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(MediaItem.fromUri(Uri.parse(contentUrl)))
+            mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(Uri.parse(contentUrl)))
+            //mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri("https://vimeo.com/1024311856"))
             exoPlayer!!.setMediaSource(mediaSource)
             exoPlayer!!.prepare()
             itemView.stylplayerView.player = exoPlayer
@@ -856,7 +863,7 @@ class VideoAdapter(var viewPager2: ViewPager2,
         fun onContentInfoAPICalling(obj: LMS_CONTENT_INFO)
         fun onCommentCLick(obj: ContentL)
         fun onShareClick(obj: ContentL)
-        fun onQuestionAnswerSetPageLoad(obj: ArrayList<QuestionL>,position:Int)
+        fun onQuestionAnswerSetPageLoad(obj: ArrayList<QuestionL>, position: Int)
         fun onLikeClick(isLike:Boolean)
         fun onBookmarkClick()
         fun onEndofVidForCountUpdate()

@@ -7,6 +7,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,6 +41,11 @@ class CorrectQuesAnsFrag : BaseFragment() , View.OnClickListener{
     private lateinit var correctAnswers: MutableList<String>
     private lateinit var incorrectAnswers: MutableList<String>
     private lateinit var recyclerView: RecyclerView
+    private lateinit var no_crcct_answr: TextView
+    private lateinit var content_name: TextView
+    private lateinit var logo_of_crrct: ImageView
+    private lateinit var iv_no_data_found_retry_: ImageView
+    private lateinit var ll_root_correct: LinearLayout
     private lateinit var adapter: RetryCorrectQuestionAnswerAdapter
     private lateinit var mContext: Context
     lateinit var progress_wheel: ProgressWheel
@@ -71,112 +79,25 @@ class CorrectQuesAnsFrag : BaseFragment() , View.OnClickListener{
 
     private fun initView(view: View) {
         recyclerView = view.findViewById(R.id.rv_correct_answer_tab)
-        progress_wheel = view.findViewById(R.id.ll_frag_my_learning_progress_wheel)
+        content_name = view.findViewById(R.id.content_name)
+        logo_of_crrct = view.findViewById(R.id.logo_of_crrct)
+        no_crcct_answr = view.findViewById(R.id.no_crcct_answr)
+        progress_wheel = view.findViewById(R.id.crrct_progress_wheel)
+        iv_no_data_found_retry_ = view.findViewById(R.id.iv_no_data_found_retry_)
+        ll_root_correct = view.findViewById(R.id.ll_root_correct)
 
         recyclerView.layoutManager = LinearLayoutManager(mContext)
 
         getTopicContentWiseAnswerListsAPICalling()
 
-        val sampleQuestionAnswers = listOf(
-            CorrectQuestionAnswer(
-                questionId = 1,
-                question = "What is a major factor driving changes in consumer behavior in the CPG market?",
-                answered = "optionNo2",
-                optionList = listOf(
-                    Option(
-                        optionId = 1,
-                        optionNo1 = "Decreased product availability",
-                        optionPoint1 = 0,
-                        isCorrect1 = false,
-                        optionNo2 = "Increased health consciousness",
-                        optionPoint2 = 5,
-                        isCorrect2 = true,
-                        optionNo3 = "Reduced marketing efforts",
-                        optionPoint3 = 0,
-                        isCorrect3 = false,
-                        optionNo4 = "Limited access to information",
-                        optionPoint4 = 0,
-                        isCorrect4 = false
-                    )
-                )
-            ),
-            CorrectQuestionAnswer(
-                questionId = 2,
-                question = "Which of the following is a common trend in the CPG industry?",
-                answered = "optionNo1",
-                optionList = listOf(
-                    Option(
-                        optionId = 2,
-                        optionNo1 = "Increased online shopping",
-                        optionPoint1 = 5,
-                        isCorrect1 = true,
-                        optionNo2 = "Decreased product variety",
-                        optionPoint2 = 0,
-                        isCorrect2 = false,
-                        optionNo3 = "Reduced consumer loyalty",
-                        optionPoint3 = 0,
-                        isCorrect3 = false,
-                        optionNo4 = "Higher prices across the board",
-                        optionPoint4 = 0,
-                        isCorrect4 = false
-                    )
-                )
-            ),
-            CorrectQuestionAnswer(
-                questionId = 3,
-                question = "What influences consumer decisions the most?",
-                answered = "optionNo1",
-                optionList = listOf(
-                    Option(
-                        optionId = 3,
-                        optionNo1 = "Brand reputation",
-                        optionPoint1 = 5,
-                        isCorrect1 = true,
-                        optionNo2 = "Product packaging",
-                        optionPoint2 = 0,
-                        isCorrect2 = false,
-                        optionNo3 = "Celebrity endorsements",
-                        optionPoint3 = 0,
-                        isCorrect3 = false,
-                        optionNo4 = "Store location",
-                        optionPoint4 = 0,
-                        isCorrect4 = false
-                    )
-                )
-            ),
-            CorrectQuestionAnswer(
-                questionId = 4,
-                question = "What is a key driver of sustainability in the CPG sector?",
-                answered = "optionNo1",
-                optionList = listOf(
-                    Option(
-                        optionId = 4,
-                        optionNo1 = "Use of biodegradable packaging",
-                        optionPoint1 = 5,
-                        isCorrect1 = true,
-                        optionNo2 = "Increased advertising",
-                        optionPoint2 = 0,
-                        isCorrect2 = false,
-                        optionNo3 = "Higher production costs",
-                        optionPoint3 = 0,
-                        isCorrect3 = false,
-                        optionNo4 = "Limited product range",
-                        optionPoint4 = 0,
-                        isCorrect4 = false
-                    )
-                )
-            )
-        )
 
-        adapter = RetryCorrectQuestionAnswerAdapter(sampleQuestionAnswers ,mContext)
-        recyclerView.adapter = adapter
     }
 
     private fun getTopicContentWiseAnswerListsAPICalling() {
 
         try {
             progress_wheel.visibility = View.VISIBLE
-            Timber.d("deleteImei call" + AppUtils.getCurrentDateTime())
+            Log.d("deleteImei call","" + AppUtils.getCurrentDateTime())
             val repository = LMSRepoProvider.getTopicList()
             BaseActivity.compositeDisposable.add(
                 repository.getTopicContentWiseAnswerLists(Pref.user_id!!, topicId , storeContentId)
@@ -188,8 +109,28 @@ class CorrectQuesAnsFrag : BaseFragment() , View.OnClickListener{
                             progress_wheel.visibility = View.GONE
 
                             try {
-                                if (response.question_answer_fetch_list != null && response.question_answer_fetch_list.size > 0) {
+                                content_name.setText("Content name : "+response.content_name)
 
+                                if (response.question_answer_fetch_list != null && response.question_answer_fetch_list.isNotEmpty()) {
+                                    // Filter list to get only the items with isCorrectAnswer set to false (incorrect answers)
+                                    val incorrectAnswers = response.question_answer_fetch_list.filter { !it.isCorrectAnswer }
+                                    println("Incorrect Answers: $incorrectAnswers")
+
+                                    // Filter list to get only the items with isCorrectAnswer set to true (correct answers)
+                                    val correctAnswers = response.question_answer_fetch_list.filter { it.isCorrectAnswer }
+                                    println("Correct Answers: $correctAnswers")
+                                    if (correctAnswers.size>0) {
+                                        ll_root_correct.visibility =View.VISIBLE
+                                        iv_no_data_found_retry_.visibility =View.GONE
+                                        adapter = RetryCorrectQuestionAnswerAdapter(
+                                            correctAnswers,
+                                            mContext
+                                        )
+                                        recyclerView.adapter = adapter
+                                    }else{
+                                        ll_root_correct.visibility =View.GONE
+                                        iv_no_data_found_retry_.visibility =View.VISIBLE
+                                    }
 
                                 } else {
                                     progress_wheel.visibility = View.GONE
@@ -216,35 +157,6 @@ class CorrectQuesAnsFrag : BaseFragment() , View.OnClickListener{
         }
 
     }
-
-    private fun separateCorrectAndIncorrectAnswers(questionAnswerFetchList: ArrayList<Question_answer_fetch_list>): Pair<List<Question_answer_fetch_list>, List<Question_answer_fetch_list>> {
-
-        val correctAnswers = mutableListOf<Question_answer_fetch_list>()
-        val incorrectAnswers = mutableListOf<Question_answer_fetch_list>()
-
-        for (questionAnswer in questionAnswerFetchList) {
-            val selectedAnswer = questionAnswer.answered
-            var isAnswerCorrect = false
-
-            for (option in questionAnswer.option_list) {
-                when (selectedAnswer) {
-                    option.option_no_1 -> isAnswerCorrect = option.isCorrect_1
-                    option.option_no_2 -> isAnswerCorrect = option.isCorrect_2
-                    option.option_no_3 -> isAnswerCorrect = option.isCorrect_3
-                    option.option_no_4 -> isAnswerCorrect = option.isCorrect_4
-                }
-            }
-
-            if (isAnswerCorrect) {
-                correctAnswers.add(questionAnswer)
-            } else {
-                incorrectAnswers.add(questionAnswer)
-            }
-        }
-
-        return Pair(correctAnswers, incorrectAnswers)
-    }
-
 
 
     override fun onClick(v: View?) {

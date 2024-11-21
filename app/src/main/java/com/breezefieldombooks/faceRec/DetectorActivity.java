@@ -654,7 +654,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             upperLi=1.0f;
           }
 //          if (conf>0.78f && conf < 1.0f) {
-          Timber.d("DetectorActivity face _conf CustomStatic.FaceDetectionAccuracyLower : "+CustomStatic.FaceDetectionAccuracyLower.toString());
+         // Timber.d("DetectorActivity face _conf CustomStatic.FaceDetectionAccuracyLower : "+CustomStatic.FaceDetectionAccuracyLower.toString());
           Timber.d("DetectorActivity face _conf lowerLi: "+lowerLi.toString() + " upperLi : "+upperLi.toString()+" conf: "+String.valueOf(conf));
           if (conf>lowerLi && conf < 1.0f) {
             //if (conf>lowerLi && conf < upperLi) {

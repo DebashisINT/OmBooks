@@ -346,6 +346,7 @@ import android.view.WindowManager
 import androidx.fragment.app.FragmentManager
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.breezefieldombooks.features.NewQuotation.ViewAllQuotListFragment.Companion.shop_name
 import com.breezefieldombooks.features.addshop.model.AudioFetchDataCLass
 import com.breezefieldombooks.features.login.api.opportunity.OpportunityRepoProvider
 import com.breezefieldombooks.features.login.model.NewSettingsResponseModel
@@ -353,6 +354,7 @@ import com.breezefieldombooks.features.mylearning.AllTopicsWiseContents
 import com.breezefieldombooks.features.mylearning.BookmarkFetchResponse
 import com.breezefieldombooks.features.mylearning.BookmarkFrag
 import com.breezefieldombooks.features.mylearning.BookmarkPlayFrag
+import com.breezefieldombooks.features.mylearning.InCorrectQuesAnsFrag
 import com.breezefieldombooks.features.mylearning.KnowledgeHubAllVideoList
 import com.breezefieldombooks.features.mylearning.LeaderboardLmsFrag
 import com.breezefieldombooks.features.mylearning.LmsQuestionAnswerSet
@@ -361,19 +363,25 @@ import com.breezefieldombooks.features.mylearning.MyLearningTopicList
 import com.breezefieldombooks.features.mylearning.MyLearningVideoPlay
 import com.breezefieldombooks.features.mylearning.MyPerformanceFrag
 import com.breezefieldombooks.features.mylearning.MyTopicsWiseContents
+import com.breezefieldombooks.features.mylearning.MyTopicsWiseContents.Companion.topic_id
+import com.breezefieldombooks.features.mylearning.MyTopicsWiseContents.Companion.topic_name
 import com.breezefieldombooks.features.mylearning.NotificationLMSFragment
 import com.breezefieldombooks.features.mylearning.RetryIncorrectQuizFrag
+import com.breezefieldombooks.features.mylearning.RetryPlayFrag
+import com.breezefieldombooks.features.mylearning.RetryQuestionFrag
 import com.breezefieldombooks.features.mylearning.SearchLmsFrag
 import com.breezefieldombooks.features.mylearning.SearchLmsKnowledgeFrag
 import com.breezefieldombooks.features.mylearning.SearchLmsLearningFrag
 import com.breezefieldombooks.features.mylearning.VideoPlayLMS
 import com.breezefieldombooks.features.mylearning.apiCall.LMSRepoProvider
+import com.breezefieldombooks.features.performanceAPP.TargetVSAchvFrag
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.internal.LifecycleCallback.getFragment
 import com.google.android.gms.security.ProviderInstaller
 import com.google.auth.oauth2.GoogleCredentials
 import kotlinx.android.synthetic.main.activity_login_new.login_TV
 import kotlinx.android.synthetic.main.toolbar_layout.tv_saved_count
+import kotlinx.coroutines.CoroutineScope
 import org.json.JSONException
 import java.net.HttpURLConnection
 import java.net.URL
@@ -547,22 +555,34 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
 
         Pref.MultiVisitIntervalInMinutes = "1"
         Pref.IsShowMenuAnyDesk = false
-        //Pref.IsShowCRMOpportunity = true
-        //Pref.IsEditEnableforOpportunity = true
-        //Pref.IsDeleteEnableforOpportunity = true
-        Pref.IsUsbDebuggingRestricted = false
-        Pref.isShowTimeline = true
-        //getFCMtoken()
         showToolbar()
-        println("load_frag " + mFragType.toString() + " " + Pref.user_id.toString() + " " + Pref.loginID)
+
+
+        println("load_frag " + mFragType.toString() + " " + Pref.user_id.toString() + " " )
 
         //  val notification = NotificationUtils(getString(R.string.app_name), "", "", "")
 
         //  notification.sendFCMNotificaitonTest(applicationContext,"Hii who are you?")
         //gallaboxApiTest()
         // trackLMSModuleLoad(mFragType)
+       // sendMailError("xyz")
+
+     /*   try{
+            if (!FTStorageUtils.isMyServiceRunning(LocationFuzedService::class.java, this@DashboardActivity)) {
+                if(Pref.isAddAttendence){
+                    Timber.d("tag_gps_check  LocationFuzedService called")
+                    serviceStatusActionable()
+                }
+            }else{
+                Timber.d("tag_gps_check LocationFuzedService running")
+            }
+        }catch (ex:Exception){
+            ex.printStackTrace()
+            Timber.d("tag_gps_check err ${ex.printStackTrace()}")
+        }*/
 
         batteryCheck(mFragType, addToStack, initializeObject)
+
 
 
         /*if (addToStack) {
@@ -574,6 +594,7 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
  }*/
 
     }
+
 
     fun getFCMtoken() {
         try {
@@ -1013,6 +1034,76 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
         return null
     }
 
+    private fun sendMailError(crashMessage: String) {
+        var m = Mail()
+        var toArr = arrayOf("")
+        doAsync {
+            try{
+                if(true){
+                    var emailRecpL = "suman.bachar@intglobal.com".split(",")
+                    m = Mail("puja.basak@intglobal.com", "klxgduyqotbtekjy")
+                    toArr = Array<String>(emailRecpL.size){""}
+                    for(i in 0..emailRecpL.size-1){
+                        toArr[i]=emailRecpL[i]
+                    }
+                    m.setTo(toArr)
+                    m.setFrom("TEAM");
+                    m.setSubject("Application Crash Report")
+                    m.setBody("Hello Team,  \n $crashMessage \n\n\n Regards \n${Pref.user_name}.")
+                    //m.send()
+                    val props = Properties().apply {
+                        put("mail.smtp.host", "smtp.gmail.com")  // SMTP server host
+                        put("mail.smtp.port", "587")                      // SMTP port
+                        put("mail.smtp.auth", "true")
+                        put("mail.smtp.starttls.enable", "true")          // Enable STARTTLS
+                        put("mail.smtp.ssl.protocols", "TLSv1.2")         // Specify TLS version
+                        put("mail.smtp.ssl.trust", "smtp.gmail.com")  // Trust the server
+                    }
+                    if (Build.VERSION.SDK_INT < 21) {
+                        try {
+                            ProviderInstaller.installIfNeeded(mContext)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                    val session = Session.getInstance(props, object : Authenticator() {
+                        override fun getPasswordAuthentication(): PasswordAuthentication {
+                            return PasswordAuthentication("puja.basak@intglobal.com", "klxgduyqotbtekjy")
+                        }
+                    })
+                    try {
+                        val message = MimeMessage(session).apply {
+                            setFrom(InternetAddress("puja.basak@intglobal.com"))            // Sender's email
+                            setRecipients(Message.RecipientType.TO, InternetAddress.parse("suman.bachar@intglobal.com"))  // Recipient's email
+                            subject = "Application Crash Report"
+                            // Email subject
+                        }
+                        val textPart = MimeBodyPart().apply {
+                            setText("Hello Team,  \n $crashMessage \n\n\n Regards \n${Pref.user_name}.")
+                        }
+
+                        val multipart = MimeMultipart().apply {
+                            addBodyPart(textPart)        // Add the text part
+                        }
+                        message.setContent(multipart)
+                        Transport.send(message)
+                        println("Email sent successfully!")
+                    } catch (e: MessagingException) {
+                        e.printStackTrace()
+                        println("tag_mail_ex2 ${e.printStackTrace()}")
+                    }
+                }
+            }catch (ex:Exception){
+                ex.printStackTrace()
+                println("tag_mail_ex1 ${ex.printStackTrace()}")
+            }
+            uiThread {
+                //Toast.makeText(this@DashboardActivity, "Crash report sent successfully.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
 
     fun batteryCheck(mFragType: FragType, addToStack: Boolean, initializeObject: Any) {
         val mTransaction = supportFragmentManager.beginTransaction()
@@ -1079,7 +1170,7 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
                 }, 1000)
             } else {
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-                if (mFragType == FragType.MyLearningFragment || mFragType == FragType.SearchLmsFrag || mFragType == FragType.VideoPlayLMS || mFragType == FragType.LeaderboardLmsFrag || mFragType == FragType.SearchLmsLearningFrag || mFragType == FragType.SearchLmsKnowledgeFrag || mFragType == FragType.MyLearningAllVideoList || mFragType == FragType.KnowledgeHubAllVideoList || mFragType == FragType.MyPerformanceFrag || mFragType == FragType.NotificationLMSFragment || mFragType == FragType.LmsQuestionAnswerSet || mFragType == FragType.MyLearningVideoPlay || mFragType == FragType.MyLearningTopicList || mFragType == FragType.BookmarkFrag || mFragType == FragType.BookmarkPlayFrag || mFragType == FragType.PerformanceInsightPage || mFragType == FragType.MyTopicsWiseContents || mFragType == FragType.AllTopicsWiseContents || mFragType == FragType.RetryIncorrectQuizFrag) {
+                if (mFragType == FragType.MyLearningFragment || mFragType == FragType.SearchLmsFrag || mFragType == FragType.VideoPlayLMS || mFragType == FragType.LeaderboardLmsFrag || mFragType == FragType.SearchLmsLearningFrag || mFragType == FragType.SearchLmsKnowledgeFrag || mFragType == FragType.MyLearningAllVideoList || mFragType == FragType.KnowledgeHubAllVideoList || mFragType == FragType.MyPerformanceFrag || mFragType == FragType.NotificationLMSFragment || mFragType == FragType.LmsQuestionAnswerSet || mFragType == FragType.MyLearningVideoPlay || mFragType == FragType.MyLearningTopicList || mFragType == FragType.BookmarkFrag || mFragType == FragType.BookmarkPlayFrag || mFragType == FragType.PerformanceInsightPage || mFragType == FragType.MyTopicsWiseContents || mFragType == FragType.AllTopicsWiseContents || mFragType == FragType.RetryIncorrectQuizFrag || mFragType == FragType.RetryPlayFrag || mFragType == FragType.RetryQuestionFrag || mFragType == FragType.InCorrectQuesAnsFrag || mFragType == FragType.CorrectQuesAnsFrag) {
                     window.setStatusBarColor(resources.getColor(R.color.toolbar_lms))
                     toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_lms))
                 } else {
@@ -1125,7 +1216,7 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
     fun callLogout() {
         Pref.IsAutoLogoutFromBatteryCheck = true
         if (AppUtils.isOnline(this)) {
-            Timber.d("Battery optimization in online mode.")
+           // Timber.d("Battery optimization in online mode.")
             (mContext as DashboardActivity).loadFragment(FragType.LogoutSyncFragment, true, "")
         } else {
             Timber.d("Battery optimization in offline mode.")
@@ -1454,6 +1545,7 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
     private lateinit var leaderBoard_TV: AppCustomTextView
 
     private lateinit var privacy_policy_tv_menu: AppCustomTextView// 14.0 DashboardActivity AppV 4.0.8 mantis 0025783 In-app privacy policy working in menu & Login
+    private lateinit var new_target_achievement_tv_menu: AppCustomTextView
 
     private lateinit var alarmCofifDataModel: AlarmConfigDataModel
     private lateinit var quo_TV: AppCustomTextView
@@ -1669,7 +1761,7 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
         initView()
         updateUI()
 
-        Timber.d("callAlarm() called")
+       // Timber.d("callAlarm() called")
         if (Pref.IsAlarmServiceRestartCalled == false) {
             Pref.IsAlarmServiceRestartCalled = true
             //callAlarm()
@@ -1772,7 +1864,7 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
 
                     val leadActivityList = AppDatabase.getDBInstance()!!.leadActivityDao()
                         .getAll(AppUtils.getCurrentDateForShopActi())
-                    Timber.d("lead activity ${leadActivityList.size}")
+                   // Timber.d("lead activity ${leadActivityList.size}")
                     leadActivityList?.forEach {
                         val notification =
                             NotificationUtils(getString(R.string.app_name), "", "", "")
@@ -2607,7 +2699,7 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
             checkLocationMode()
         val networkIntentFilter = IntentFilter()
         networkIntentFilter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION)
-        Timber.d("DashActi registerReceiver gpsReceiver")
+       // Timber.d("DashActi registerReceiver gpsReceiver")
         //registerReceiver(gpsReceiver, networkIntentFilter);
         registerReceiver(gpsReceiver, networkIntentFilter);
 
@@ -2993,8 +3085,10 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
 
     val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            Timber.d("DashActi broadcastReceiver gps status GpsDisableFragment ${AppUtils.gpsDisabledAction}")
+           // Timber.d("DashActi broadcastReceiver gps status GpsDisableFragment ${AppUtils.gpsDisabledAction}")
+
             if (intent.action == AppUtils.gpsDisabledAction) {
+                println("tag_gps_check onReceive disable")
                 isGpsDisabled = true
                 loadFragment(FragType.GpsDisableFragment, true, "")
 
@@ -3004,9 +3098,21 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
  }*/
 
             } else {
+                println("tag_gps_check onReceive enable")
                 isGpsDisabled = false
                 if (getFragment() != null && getFragment() is GpsDisableFragment) {
                     onBackPressed()
+                }
+                try{
+                    if (!FTStorageUtils.isMyServiceRunning(LocationFuzedService::class.java, this@DashboardActivity)) {
+                        Timber.d("tag_gps_check  LocationFuzedService called")
+                        serviceStatusActionable()
+                    }else{
+                        Timber.d("tag_gps_check LocationFuzedService running")
+                    }
+                }catch (ex:Exception){
+                    ex.printStackTrace()
+                    Timber.d("tag_gps_check err ${ex.printStackTrace()}")
                 }
             }
         }
@@ -3046,7 +3152,7 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
         // unregisterReceiver(broadcastReceiver)
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
         // code end by puja 23.03.2024 mantis id - 27333
-        Timber.d("DashActi onDestroy")
+       // Timber.d("DashActi onDestroy")
         if (gpsReceiver != null)
         // code start by puja 23.03.2024 mantis id - 27333
         // unregisterReceiver(gpsReceiver)
@@ -3077,7 +3183,7 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
             LocalBroadcastManager.getInstance(this).unregisterReceiver(fcmReceiver_leave)
 
         // 13.0 DashboardActivity AppV 4.0.7 Suman 31-03-2023 quotation auto mail app kill work mantis 25766
-        Timber.d("quto_mail ondestroy receiver...")
+      //  Timber.d("quto_mail ondestroy receiver...")
         /* if (fcmReceiver_quotation_approval != null)
  LocalBroadcastManager.getInstance(this).unregisterReceiver(fcmReceiver_quotation_approval)
  */
@@ -3115,7 +3221,7 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
  unregisterReceiver(geoFenceBroadcast)*/
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 
         onFireAlarm(intent!!)
@@ -3495,11 +3601,12 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
 
         surveyMenu.text = Pref.surveytext
 
-        privacy_policy_tv_menu =
-            findViewById(R.id.privacy_policy_tv_menu)// 14.0 DashboardActivity AppV 4.0.8 mantis 0025783 In-app privacy policy working in menu & Login
+        privacy_policy_tv_menu = findViewById(R.id.privacy_policy_tv_menu)// 14.0 DashboardActivity AppV 4.0.8 mantis 0025783 In-app privacy policy working in menu & Login
         privacy_policy_tv_menu.setOnClickListener(this)// 14.0 DashboardActivity AppV 4.0.8 mantis 0025783 In-app privacy policy working in menu & Login
         privacy_policy_tv_menu.setOnClickListener(this)// 14.0 DashboardActivity AppV 4.0.8 mantis 0025783 In-app privacy policy working in menu & Login
 
+        new_target_achievement_tv_menu = findViewById(R.id.new_target_achievement_tv_menu)
+        new_target_achievement_tv_menu.setOnClickListener(this)
         home_RL.setOnClickListener(this)
         add_shop_RL.setOnClickListener(this)
         nearby_shops_RL.setOnClickListener(this)
@@ -3955,6 +4062,9 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
             menuItems.add(MenuItems("Home", R.drawable.ic_home_adv))
             menuItems.add(MenuItems("LMS", R.drawable.ic_learning_adv))
         }
+        if(Pref.ShowTargetOnApp){
+            menuItems.add(MenuItems("Target Vs Achievement", R.drawable.ic_ta))
+        }
         if (Pref.IsShowPrivacyPolicyInMenu) {
             menuItems.add(MenuItems("Privacy Policy", R.drawable.ic_privacy_policy))
         }
@@ -4002,8 +4112,7 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
 
         menuSubItemsL.add(menuSubObjLms)
 
-        adapterMenuAdv =
-            AdapterMenuAdv(this, menuItems, menuSubItemsL, object : AdapterMenuAdv.OnClick {
+        adapterMenuAdv = AdapterMenuAdv(this, menuItems, menuSubItemsL, object : AdapterMenuAdv.OnClick {
                 override fun onClick(obj: MenuItems) {
                     progress_wheel.spin()
                     if (obj.name.equals("Home", ignoreCase = true)) {
@@ -4211,6 +4320,9 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
                     if (obj.name.equals("My Performance", ignoreCase = true) && obj.icon == 0) {
                         CustomStatic.LMSMyPerformanceFromMenu = true
                         loadFragment(FragType.MyPerformanceFrag, false, "")
+                    }
+                    if (obj.name.equals("Target Vs Achievement", ignoreCase = true)) {
+                        new_target_achievement_tv_menu.performClick()
                     }
                     if (obj.name.equals("Privacy Policy", ignoreCase = true)) {
                         privacy_policy_tv_menu.performClick()
@@ -5052,6 +5164,9 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
                     toolbar.setBackgroundResource(R.drawable.custom_toolbar_back)
                 }
             }
+            R.id.new_target_achievement_tv_menu -> {
+                loadFragment(FragType.TargetVSAchvFrag, false, "")
+            }
 
             /*28-12-2022*/
             // 1.0 AppV 4.0.6
@@ -5303,7 +5418,15 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
             }
 
             R.id.add_bookmark -> {
-                loadFragment(FragType.BookmarkFrag, true, "")
+
+                try {
+                    (getFragment() as VideoPlayLMS).onPause()
+                    (getFragment() as VideoPlayLMS).onStop()
+                    loadFragment(FragType.BookmarkFrag, true, "")
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    loadFragment(FragType.BookmarkFrag, true, "")
+                }
             }
 
             //code begin by puja 22-01-24
@@ -8210,6 +8333,39 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
                 setTopBarVisibility(TopBarConfig.LMS_SEARCH)
             }
 
+            FragType.RetryPlayFrag -> {
+                if (enableFragGeneration) {
+                    mFragment = RetryPlayFrag()
+                }
+                setTopBarTitle("Review and Retry")
+                setTopBarVisibility(TopBarConfig.LMS_SEARCH)
+            }
+
+            FragType.InCorrectQuesAnsFrag -> {
+                if (enableFragGeneration) {
+                    mFragment = InCorrectQuesAnsFrag()
+                }
+                setTopBarTitle("Review andCorrect")
+                setTopBarVisibility(TopBarConfig.LMS_SEARCH)
+            }
+
+            FragType.CorrectQuesAnsFrag -> {
+                if (enableFragGeneration) {
+                    mFragment = CorrectQuesAnsFrag()
+                }
+                setTopBarTitle("Correct Answer review")
+                setTopBarVisibility(TopBarConfig.LMS_SEARCH)
+            }
+
+
+            FragType.RetryQuestionFrag -> {
+                if (enableFragGeneration) {
+                    mFragment = RetryQuestionFrag()
+                }
+                setTopBarTitle("Review and Retry")
+                setTopBarVisibility(TopBarConfig.LMS_SEARCH)
+            }
+
             FragType.LmsQuestionAnswerSet -> {
                 if (enableFragGeneration) {
                     mFragment = LmsQuestionAnswerSet.getInstance(initializeObject)
@@ -8254,7 +8410,7 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
                 if (enableFragGeneration) {
                     mFragment = RetryIncorrectQuizFrag.getInstance(initializeObject)
                 }
-                setTopBarTitle("Retry Incorrect Quiz")
+                setTopBarTitle("Review and Retry")
                 setTopBarVisibility(TopBarConfig.LMS_SEARCH)
             }
 
@@ -8330,6 +8486,13 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
                     mFragment = PrivacypolicyWebviewFrag()
                 }
                 setTopBarTitle("Privacy Policy")
+                setTopBarVisibility(TopBarConfig.GENERAL_HOME_MENU)
+            }
+            FragType.TargetVSAchvFrag -> {
+                if (enableFragGeneration) {
+                    mFragment = TargetVSAchvFrag()
+                }
+                setTopBarTitle("Target Vs Achievement")
                 setTopBarVisibility(TopBarConfig.GENERAL_HOME_MENU)
             }
 
@@ -11100,6 +11263,7 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
     @SuppressLint("NewApi")
     override fun onBackPressed() {
         try {
+            CustomStatic.IsQuestionPageOpen =false
             (this as Activity).requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             showToolbar()
             callmoduleEnd()
@@ -11107,14 +11271,7 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
             e.printStackTrace()
         }
 
-        if (Pref.IsUserWiseLMSFeatureOnly){
-            //statusColorPortrait()
-            window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-            statusColorPortrait()
-        }else{
-            window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            statusColorPortraitWithFsm()
-        }
+
 
         val fm = supportFragmentManager
         // code start by puja 23.03.2024 mantis id - 27333
@@ -11130,6 +11287,20 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
         var ttt = fm.backStackEntryCount
         var cf = getFragment()
         println("tag_kali begin ${getFragment()}")
+
+        if (getFragment() != null){
+            if (Pref.IsUserWiseLMSFeatureOnly /*&&*/ || getFragment() is RetryPlayFrag  /*|| Pref.IsUserWiseLMSEnable*/ ){
+                //statusColorPortrait()
+                window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+                statusColorPortrait()
+            }else{
+                window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                statusColorPortraitWithFsm()
+            }
+        }
+
+
+
         if (getFragment() != null && getFragment() is NotificationLMSFragment) {
             loadFragment(FragType.MyLearningFragment, false, DashboardType.Home)
         }
@@ -12026,28 +12197,6 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
                 }
             }
 
-            /*else if (LeaderboardLmsFrag.loadedFrom.equals("MyPerformanceFrag")) {
-
-                try {
-                    if (getFragment() != null && getFragment() is LeaderboardLmsFrag) {
-                    loadFragment(FragType.MyPerformanceFrag, false, "")
-                    }
-                } catch (e: Exception) {
-                    loadFragment(FragType.MyPerformanceFrag, false, "")
-                }
-            }
-
-            else if (LeaderboardLmsFrag.loadedFrom.equals("PerformanceInsightPage")) {
-                try {
-                    loadFragment(
-                        FragType.PerformanceInsightPage,
-                        false,""
-                    )
-                } catch (e: Exception) {
-                    loadFragment(FragType.PerformanceInsightPage, false, "")
-                }
-            }*/
-
             else if (getFragment() != null && getFragment() is PerformanceInsightPage) {
                 loadFragment(FragType.MyLearningTopicList, false, "")
             }
@@ -12073,29 +12222,25 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
         else if (getFragment() != null && getFragment() is MyPerformanceFrag && CustomStatic.LMSLeaderboardFromMenu) {
             loadFragment(FragType.MyLearningFragment, false, DashboardType.Home)
         }
+        else if (getFragment() != null && getFragment() is RetryQuestionFrag ) {
+            loadFragment(FragType.RetryIncorrectQuizFrag, false, CustomStatic.RetryTopicId.toString() + "~"+ CustomStatic.RetryContentId.toString() +"~"+ CustomStatic.RetryTopicName + "~"+ CustomStatic.RetryContentURL +"~" +CustomStatic.RetryContentName)
+        }
+        else if (getFragment() != null && getFragment() is RetryIncorrectQuizFrag ) {
+            if (VideoPlayLMS.loadedFrom.equals("MyTopicsWiseContents")){
+                loadFragment(FragType.MyTopicsWiseContents, false, CustomStatic.RetryTopicId.toString() + "~"+ CustomStatic.RetryContentId.toString() +"~"+ CustomStatic.RetryTopicName + "~"+ CustomStatic.RetryContentURL +"~" +CustomStatic.RetryContentName)
 
-        /*else if(getFragment() != null && getFragment() is VideoPlayLMS){
- super.onBackPressed()
- var frgg = getFragment()
- if (getFragment() != null && getFragment() is SearchLmsFrag){
- (getFragment() as SearchLmsFrag).updateToolbar()
- }else{
- var frgge = getFragment()
- }
- }
- else if(getFragment() != null && getFragment() is MyLearningVideoPlay){
- (getFragment() as MyLearningVideoPlay).onAPICalling()
- super.onBackPressed()
- if (getFragment() != null && getFragment() is SearchLmsLearningFrag){
- (getFragment() as SearchLmsLearningFrag).updateList()
- }
- }*/
-        /*else if(getFragment() != null && getFragment() is LmsQuestionAnswerSet){
+            }else if(VideoPlayLMS.loadedFrom.equals("AllTopicsWiseContents")){
+                loadFragment(FragType.AllTopicsWiseContents, false, CustomStatic.RetryTopicId.toString() + "~"+ CustomStatic.RetryContentId.toString() +"~"+ CustomStatic.RetryTopicName + "~"+ CustomStatic.RetryContentURL +"~" +CustomStatic.RetryContentName)
 
- }*/
-        /*else if (Pref.IsUserWiseLMSFeatureOnly && getFragment() != null ){
- super.onBackPressed()
- }*/
+            }else if(VideoPlayLMS.loadedFrom.equals("SearchLmsLearningFrag")){
+                loadFragment(FragType.SearchLmsLearningFrag, false, CustomStatic.RetryTopicId.toString() + "~"+ CustomStatic.RetryContentId.toString() +"~"+ CustomStatic.RetryTopicName + "~"+ CustomStatic.RetryContentURL +"~" +CustomStatic.RetryContentName)
+
+            }else{
+                
+            }
+        }
+
+
         else {
             var k1 = getFragment()
             super.onBackPressed()
@@ -12335,6 +12480,7 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
         )
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun callUpdateGpsStatusApi(list: List<GpsStatusEntity>) {
 
         val updateGps = UpdateGpsInputParamsModel()
@@ -12354,10 +12500,6 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
                 .subscribeOn(Schedulers.io())
                 .subscribe({ result ->
                     val gpsStatusResponse = result as BaseResponse
-                    Timber.d(
-                        "GPS SYNC : " + "RESPONSE : " + "\n" + "Time : " + AppUtils.getCurrentDateTime() + ", USER :" + Pref.user_name
-                                + ",MESSAGE : " + gpsStatusResponse.message
-                    )
                     if (gpsStatusResponse.status == NetworkConstant.SUCCESS) {
                         AppDatabase.getDBInstance()!!.gpsStatusDao()
                             .updateIsUploadedAccordingToId(true, list[i].id)
@@ -14184,6 +14326,8 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
                                     } else if (intent.getStringExtra("TYPE")
                                             .equals("lms_content_assign", ignoreCase = true)
                                     ) {
+                                        (getFragment() as VideoPlayLMS).onPause()
+                                        (getFragment() as VideoPlayLMS).onStop()
                                         loadFragment(FragType.NotificationLMSFragment, false, "")
                                     } else if (intent.getStringExtra("TYPE")
                                             .equals("clearData", ignoreCase = true)
@@ -20780,12 +20924,12 @@ class DashboardActivity : BaseActivity(), View.OnClickListener, BaseNavigation,
     }
 
     fun statusColorPortrait(){
-        try {
+       // try {
             window.setStatusBarColor(resources.getColor(R.color.toolbar_lms))
-        } catch (e: Exception) {
+        /*} catch (e: Exception) {
             e.printStackTrace()
             window.setStatusBarColor(resources.getColor(R.color.toolbar_lms))
-        }
+        }*/
     }
 
     fun statusColorPortraitWithFsm(){

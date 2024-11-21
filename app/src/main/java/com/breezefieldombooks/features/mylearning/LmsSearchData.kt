@@ -22,11 +22,19 @@ data class BookmarkResponse(var user_id:String="",var topic_id:String="",var top
 
 data class BookmarkFetchResponse(var bookmark_list:ArrayList<VidBookmark> = ArrayList()):BaseResponse()
 
-data class TopicContentWiseAnswerListsFetchResponse(var user_id:String="",var topic_id:String="",var topic_name:String="",var content_id:String="",var content_name:String="",var question_answer_fetch_list:ArrayList<Question_answer_fetch_list> = ArrayList()):BaseResponse()
-data class Question_answer_fetch_list(var topic_id:String="",var content_id:String="",var question_id:String="",var question:String="",var question_description:String="",var answered:String="",var option_list:ArrayList<Option_list> = ArrayList())
+data class TopicContentWiseAnswerListsFetchResponse(
+    var user_id:Int=0,
+    var topic_id:Int=0,
+    var topic_name:String="",
+    var content_id:Int=0,
+    var content_name:String="",
+    var question_answer_fetch_list: List<Question_answer_fetch_list> = ArrayList()):BaseResponse()
+data class Question_answer_fetch_list(var topic_id:Int=0,var content_id:Int=0,var question_id:Int=0,var question:String="",var question_description:String="",var answered:String="",var isCorrectAnswer:Boolean=false,var option_list:ArrayList<Option_list> = ArrayList())
 data class Option_list(var question_id:Int=0,var option_id:Int=0,
                        var option_no_1:String="",var option_point_1:Int=0,var isCorrect_1:Boolean=false,
                        var option_no_2:String="",var option_point_2:Int=0,var isCorrect_2:Boolean=false,
                        var option_no_3:String="",var option_point_3:Int=0,var isCorrect_3:Boolean=false,
                        var option_no_4:String="",var option_point_4:Int=0,var isCorrect_4:Boolean=false)
+
+data class Match_Option_list(var option_no_1:String="", var option_no_2:String="", var option_no_3:String="", var option_no_4:String="")
 

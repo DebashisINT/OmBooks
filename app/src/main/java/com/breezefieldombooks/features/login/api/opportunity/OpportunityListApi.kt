@@ -3,6 +3,10 @@ package com.breezefieldombooks.features.login.api.opportunity
 import com.breezefieldombooks.app.NetworkConstant
 import com.breezefieldombooks.base.BaseResponse
 import com.breezefieldombooks.features.addshop.model.AudioFetchDataCLass
+import com.breezefieldombooks.features.addshop.model.LoanDetailFetchListsResponse
+import com.breezefieldombooks.features.addshop.model.LoanDispositionListsResponse
+import com.breezefieldombooks.features.addshop.model.LoanFinalStatusListsResponse
+import com.breezefieldombooks.features.addshop.model.LoanRiskTypeListsResponse
 import com.breezefieldombooks.features.addshop.model.StockAllResponse
 import com.breezefieldombooks.features.dashboard.presentation.DashboardActivity
 import com.breezefieldombooks.features.login.model.opportunitymodel.OpportunityStatusListResponseModel
@@ -52,6 +56,25 @@ interface OpportunityListApi {
     @FormUrlEncoded
     @POST("OrderWithStockMgmtDetails/ListForProductStock")
     fun getAllStockApi(@Field("user_id") user_id: String): Observable<StockAllResponse>
+
+    @FormUrlEncoded
+    @POST("LoanInfoDetails/LoanRiskTypeLists")
+    fun getLoanRiskTypeLists(@Field("user_id") user_id: String): Observable<LoanRiskTypeListsResponse>
+
+    @FormUrlEncoded
+    @POST("LoanInfoDetails/LoanDispositionLists")
+    fun getLoanDispositionLists(@Field("user_id") user_id: String): Observable<LoanDispositionListsResponse>
+
+
+    @FormUrlEncoded
+    @POST("LoanInfoDetails/LoanFinalStatusLists")
+    fun getLoanFinalStatusLists(@Field("user_id") user_id: String): Observable<LoanFinalStatusListsResponse>
+
+
+    @FormUrlEncoded
+    @POST("LoanInfoDetails/LoanDetailFetch")
+    fun getLoanDetailFetch(@Field("user_id") user_id: String): Observable<LoanDetailFetchListsResponse>
+
 
     /**
      * Companion object to create the GithubApiService

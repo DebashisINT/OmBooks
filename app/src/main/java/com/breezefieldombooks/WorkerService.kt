@@ -26,7 +26,7 @@ class WorkerService(context: Context,workParm:WorkerParameters):Worker(context,w
 
     override fun doWork(): Result {
         println("tag_ worker ${AppUtils.contx.toString()}")
-        Timber.d("Worker doWork")
+        //Timber.d("Worker doWork")
         try{
             if(AppUtils.contx!=null){
                 if (!FTStorageUtils.isMyServiceRunning(LocationFuzedService::class.java, AppUtils.contx)) {
@@ -54,10 +54,10 @@ class WorkerService(context: Context,workParm:WorkerParameters):Worker(context,w
                 return
             }
             val serviceLauncher = Intent(AppUtils.contx, LocationFuzedService::class.java)
-            Timber.d("TAG_CHECK_LOC_SERVICE_STATUS")
+                //Timber.d("TAG_CHECK_LOC_SERVICE_STATUS")
 
             if (Pref.user_id != null && Pref.user_id!!.isNotEmpty()) {
-                Timber.d("serviceStatusActionable")
+               // Timber.d("serviceStatusActionable")
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     val jobScheduler = AppUtils.contx!!.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
                     val componentName = ComponentName(AppUtils.contx as Activity, LocationJobService::class.java)
@@ -71,7 +71,7 @@ class WorkerService(context: Context,workParm:WorkerParameters):Worker(context,w
                     val resultCode = jobScheduler.schedule(jobInfo)
 
                     if (resultCode == JobScheduler.RESULT_SUCCESS) {
-                        Timber.d("=============================== doWork serviceStatusActionable   Job scheduled  " + AppUtils.getCurrentDateTime() + "============================")
+                       // Timber.d("=============================== doWork serviceStatusActionable   Job scheduled  " + AppUtils.getCurrentDateTime() + "============================")
                     } else {
                         Timber.d("===================== doWork serviceStatusActionable Job not scheduled  " + AppUtils.getCurrentDateTime() + "====================================")
                     }

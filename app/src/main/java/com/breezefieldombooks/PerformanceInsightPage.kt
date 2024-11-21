@@ -78,6 +78,7 @@ class PerformanceInsightPage : BaseFragment() , View.OnClickListener {
         iv_lms_knowledgehub=view.findViewById(R.id.iv_lms_knowledgehub)
         tv_lms_knowledgehub=view.findViewById(R.id.tv_lms_knowledgehub)
 
+       //
         ll_frag_search_mylearning_root=view.findViewById(R.id.ll_frag_search_mylearning_root)
         cv_lms_leaderboard=view.findViewById(R.id.cv_lms_leaderboard)
         cv_frag_search_mylearning_root=view.findViewById(R.id.cv_frag_search_mylearning_root)

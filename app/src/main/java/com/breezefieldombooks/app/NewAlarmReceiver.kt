@@ -53,12 +53,12 @@ class NewAlarmReceiver : BroadcastReceiver() {
                                     .setOverrideDeadline(1000)
                                     .build()
 
-                            Timber.d("TAG_CHECK_LOC_SERVICE_STATUS")
+                           // Timber.d("TAG_CHECK_LOC_SERVICE_STATUS")
                             val resultCode = jobScheduler.schedule(jobInfo)
 
                             if (resultCode == JobScheduler.RESULT_SUCCESS) {
 //                                XLog.d("===============================Job scheduled (NewAlarmReceiver)============================")
-                                Timber.d("===============================Job scheduled (NewAlarmReceiver)============================")
+                               // Timber.d("===============================Job scheduled (NewAlarmReceiver)============================")
                             } else {
 //                                XLog.d("=====================Job not scheduled (NewAlarmReceiver)====================================")
                                 Timber.d("=====================Job not scheduled (NewAlarmReceiver)====================================")

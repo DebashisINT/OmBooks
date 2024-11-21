@@ -18,11 +18,11 @@ import timber.log.Timber
 
 class AlarmServiceRestart: BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        Timber.d("AlarmServiceRestart onReceive")
+        //Timber.d("AlarmServiceRestart onReceive")
 
-        Timber.d("AlarmServiceRestart running : Time :" + AppUtils.getCurrentDateTime())
+        //Timber.d("AlarmServiceRestart running : Time :" + AppUtils.getCurrentDateTime())
         if (FTStorageUtils.isMyServiceRunning(LocationFuzedService::class.java, context)) {
-            Timber.d("AlarmServiceRestart loc service check service running : Time :" + AppUtils.getCurrentDateTime())
+            //Timber.d("AlarmServiceRestart loc service check service running : Time :" + AppUtils.getCurrentDateTime())
         }else{
             Timber.d("AlarmServiceRestart loc service check service not running : Time :" + AppUtils.getCurrentDateTime())
             Timber.d("restarting loc service")
@@ -47,11 +47,11 @@ class AlarmServiceRestart: BroadcastReceiver() {
                         .setOverrideDeadline(1000)
                         .build()
 
-                    Timber.d("tag AlarmServiceRestart")
+                    //Timber.d("tag AlarmServiceRestart")
                     val resultCode = jobScheduler.schedule(jobInfo)
 
                     if (resultCode == JobScheduler.RESULT_SUCCESS) {
-                        Timber.d("===============================From AlarmServiceRestart LocationFuzedService   Job scheduled " + AppUtils.getCurrentDateTime() + "============================")
+                        //Timber.d("===============================From AlarmServiceRestart LocationFuzedService   Job scheduled " + AppUtils.getCurrentDateTime() + "============================")
                     } else {
                         Timber.d("=====================From AlarmServiceRestart LocationFuzedService Job not scheduled " + AppUtils.getCurrentDateTime() + "====================================")
                     }

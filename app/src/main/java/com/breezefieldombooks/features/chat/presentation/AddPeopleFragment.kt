@@ -192,7 +192,7 @@ class AddPeopleFragment : BaseFragment() {
                         .subscribeOn(Schedulers.io())
                         .subscribe({ result ->
                             val response = result as GroupUserResponseModel
-                            Timber.d("Get Group User List STATUS: " + response.status)
+                           // Timber.d("Get Group User List STATUS: " + response.status)
                             if (response.status == NetworkConstant.SUCCESS) {
                                 progress_wheel.stopSpinning()
                                 tv_no_data.visibility = View.GONE

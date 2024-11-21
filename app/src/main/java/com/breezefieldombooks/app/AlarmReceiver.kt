@@ -80,7 +80,7 @@ class AlarmReceiver : BroadcastReceiver() {
         if (intent.hasExtra("request_code")) {
             if (intent.getIntExtra("request_code", 0) == 123) {
                 if (FTStorageUtils.isMyServiceRunning(LocationFuzedService::class.java, context)) {
-                    Timber.e("Alarm_Service: Service is running.")
+                   // Timber.e("Alarm_Service: Service is running.")
                 } else {
                     Timber.e("Alarm_Service: Service is stopped.")
 
@@ -100,17 +100,17 @@ class AlarmReceiver : BroadcastReceiver() {
                                     .setOverrideDeadline(1000)
                                     .build()
 
-                            Timber.d("TAG_CHECK_LOC_SERVICE_STATUS")
+                           // Timber.d("TAG_CHECK_LOC_SERVICE_STATUS")
                             val resultCode = jobScheduler.schedule(jobInfo)
 
                             if (resultCode == JobScheduler.RESULT_SUCCESS) {
-                                Timber.d("===============================Job scheduled (Alarm Receiver)============================")
+                               // Timber.d("===============================Job scheduled (Alarm Receiver)============================")
                             } else {
                                 Timber.d("=====================Job not scheduled (Alarm Receiver)====================================")
                             }
                         } else {
                             val serviceLauncher = Intent(context, LocationFuzedService::class.java)
-                            Timber.d("TAG_CHECK_LOC_SERVICE_STATUS")
+                           // Timber.d("TAG_CHECK_LOC_SERVICE_STATUS")
                             context.startService(serviceLauncher)
                         }
                     }

@@ -36,7 +36,7 @@ public class MonitorCollPending extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         // start 1.0 MonitorCollPending  v 4.1.6 Saheli mantis 0026430 Play console report fixing 23-06-2023
         try{
-            Timber.d("MonitorCollPending onReceive entered");
+            //Timber.d("MonitorCollPending onReceive entered");
             int notiID=intent.getIntExtra("notiId",0);
             String subject=intent.getStringExtra("coll");
             String body = "";

@@ -1119,6 +1119,9 @@ object Pref : PreferenceHolder() {
 
     //Mantis 0027772 Puja 17.10.2024
     var ShowRetryIncorrectQuiz : Boolean by bindToPreferenceField(false, "ShowRetryIncorrectQuiz")
+
+    var ShowTargetOnApp : Boolean by bindToPreferenceField(false, "ShowTargetOnApp")
+    var WillShowLoanDetailsInParty : Boolean by bindToPreferenceField(false, "WillShowLoanDetailsInParty")
 }
 
 

@@ -245,7 +245,7 @@ class ApprovalPendFrag: BaseFragment(), View.OnClickListener {
                             .subscribeOn(Schedulers.io())
                             .subscribe({ result ->
                                 val response = result as GetReportToFCMResponse
-
+                               // progress_wheel.stopSpinning()
                                 if (response.status == NetworkConstant.SUCCESS) {
                                     sendLeaveApprRejctFCMNotiUser(response.device_token!!,leave_status)
                                 }

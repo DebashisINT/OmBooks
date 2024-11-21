@@ -239,5 +239,6 @@ class ConfigFetchResponseModel : BaseResponse() {
     var IsVideoAutoPlayInLMS:Boolean? = true
 
     var ShowRetryIncorrectQuiz:Boolean? = false
+    var WillShowLoanDetailsInParty:Boolean? = false
 
 }

@@ -3,7 +3,9 @@
 // update version retrofit_version,dagger_version
 buildscript {
     ext.kotlin_version = '1.7.20'
-    ext.dagger_version = '2.51.1'
+    //ext.kotlin_version = '1.9.0'
+    //ext.acraVersion = '5.8.4'
+    ext.dagger_version = '2.52'
     ext.arch_version = "1.0.0"
     ext.support_version = "27.1.1"
     ext.rxjava_version = "2.1.6"

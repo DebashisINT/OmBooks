@@ -5089,6 +5089,11 @@ class DashboardFragment : BaseFragment(), View.OnClickListener/*, HBRecorderList
                                                 if (!TextUtils.isEmpty(response.getconfigure?.get(i)?.Value)) {
                                                     Pref.AllowOrderOnOutstandingAndClosingStockDifferenceUserWise = response.getconfigure?.get(i)?.Value == "1"
                                                 }
+                                            }else if (response.getconfigure?.get(i)?.Key.equals("ShowTargetOnApp", ignoreCase = true)) {
+                                                Pref.ShowTargetOnApp = response.getconfigure!![i].Value == "1"
+                                                if (!TextUtils.isEmpty(response.getconfigure?.get(i)?.Value)) {
+                                                    Pref.ShowTargetOnApp = response.getconfigure?.get(i)?.Value == "1"
+                                                }
                                             }
 
                                         }
@@ -5622,6 +5627,9 @@ class DashboardFragment : BaseFragment(), View.OnClickListener/*, HBRecorderList
                                     Pref.WillCreditDaysFollow = configResponse.WillCreditDaysFollow!!
                                 if (configResponse.AllowOrderOnOutstandingAndClosingStockDifference != null)
                                     Pref.AllowOrderOnOutstandingAndClosingStockDifference = configResponse.AllowOrderOnOutstandingAndClosingStockDifference!!
+
+                                if (configResponse.WillShowLoanDetailsInParty != null)
+                                    Pref.WillShowLoanDetailsInParty = configResponse.WillShowLoanDetailsInParty!!
                             }
                             BaseActivity.isApiInitiated = false
                             /*API_Optimization 02-03-2022*/

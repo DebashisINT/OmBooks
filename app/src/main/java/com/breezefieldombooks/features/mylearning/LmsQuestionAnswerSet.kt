@@ -23,6 +23,7 @@ import com.breezefieldombooks.R
 import com.breezefieldombooks.base.presentation.BaseFragment
 import com.breezefieldombooks.features.dashboard.presentation.DashboardActivity
 import android.os.Handler
+import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
@@ -188,21 +189,36 @@ class LmsQuestionAnswerSet : BaseFragment() , View.OnClickListener {
                         var points = 0
                         //var opSelection = 0
                         var correctAns=""
+                        var answerGiven = ""
+                        if(opSelection == 1){
+                            answerGiven = prevObj.option_list.get(0).option_no_1
+                        }else if(opSelection == 2){
+                            answerGiven = prevObj.option_list.get(0).option_no_2
+                        }else if(opSelection == 3){
+                            answerGiven = prevObj.option_list.get(0).option_no_3
+                        }else if(opSelection == 4){
+                            answerGiven = prevObj.option_list.get(0).option_no_4
+                        }
+
                         if(opSelection ==1 && correct1){
                             isCorrectAnsGiven = true
                             points = prevObj.option_list.get(0).option_point_1.toInt()
+                            correctAns = prevObj.option_list.get(0).option_no_1
                             opSelection = 0
                         }else if(opSelection ==2 && correct2){
                             isCorrectAnsGiven = true
                             points = prevObj.option_list.get(0).option_point_2.toInt()
+                            correctAns = prevObj.option_list.get(0).option_no_2
                             opSelection = 0
                         }else if(opSelection ==3 && correct3){
                             isCorrectAnsGiven = true
                             points = prevObj.option_list.get(0).option_point_3.toInt()
+                            correctAns = prevObj.option_list.get(0).option_no_3
                             opSelection = 0
                         }else if(opSelection ==4 && correct4){
                             isCorrectAnsGiven = true
                             points = prevObj.option_list.get(0).option_point_4.toInt()
+                            correctAns = prevObj.option_list.get(0).option_no_4
                             opSelection = 0
                         }
                     if(correct1){
@@ -238,7 +254,7 @@ class LmsQuestionAnswerSet : BaseFragment() , View.OnClickListener {
                     obj.question_id = prevObj.question_id.toInt()
                     obj.question = prevObj.question
                     obj.option_id = prevObj.option_list.get(0).option_id.toInt()
-                    obj.option_number = correctAns
+                    obj.option_number = answerGiven//correctAns
                     obj.option_point = points
                     obj.isCorrect = isCorrectAnsGiven
                     obj.completionStatus = true
@@ -362,13 +378,14 @@ class LmsQuestionAnswerSet : BaseFragment() , View.OnClickListener {
 
     private fun saveQAAPICalling() {
         try {
-            Timber.d("deleteImei call" + AppUtils.getCurrentDateTime())
+            Log.d("deleteImei call",""+ AppUtils.getCurrentDateTime())
 
             var content_wise_QA_save = CONTENT_WISE_QA_SAVE()
             content_wise_QA_save.user_id = Pref.user_id!!
             content_wise_QA_save.question_answer_save_list = question_answer_save_data
 
             var a = 11
+            Log.d("content_wise_QA_save","" + content_wise_QA_save)
 
             val repository = LMSRepoProvider.getTopicList()
             BaseActivity.compositeDisposable.add(
@@ -674,7 +691,7 @@ class LmsQuestionAnswerSet : BaseFragment() , View.OnClickListener {
             if (lastvideo==true){
                 //(mContext as DashboardActivity).onBackPressed()
                 //(mContext as DashboardActivity).onBackPressed()
-                CustomStatic.IsHomeClick = true
+                CustomStatic.IsHomeClick = false
                 (mContext as DashboardActivity).loadFragment(FragType.SearchLmsFrag, false, "")
             }else {
                 (mContext as DashboardActivity).onBackPressed()

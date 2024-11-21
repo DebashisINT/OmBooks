@@ -9,6 +9,8 @@ import com.breezefieldombooks.features.mylearning.BookmarkFetchResponse
 import com.breezefieldombooks.features.mylearning.BookmarkResponse
 import com.breezefieldombooks.features.mylearning.CONTENT_WISE_QA_SAVE
 import com.breezefieldombooks.features.mylearning.ContentCountSave_Data
+import com.breezefieldombooks.features.mylearning.Crash_Report_Save
+import com.breezefieldombooks.features.mylearning.Crash_Report_Save_Data
 import com.breezefieldombooks.features.mylearning.LMSLeaderboardOverAllData
 import com.breezefieldombooks.features.mylearning.LMSLeaderboardOwnData
 import com.breezefieldombooks.features.mylearning.LMS_CONTENT_INFO
@@ -73,5 +75,14 @@ class LMSRepo(val apiService: LMSApi) {
 
     fun getTopicContentWiseAnswerLists(user_id: String ,topic_id: String , content_id: String): Observable<TopicContentWiseAnswerListsFetchResponse> {
         return apiService.getTopicContentWiseAnswerLists(user_id,topic_id,content_id)
+    }
+
+    fun getTopicContentWiseAnswerUpdate(user_id: String ,session_token: String,topic_id: Int ,topic_name:String, content_id: Int,question_id:Int,question:String,
+                                        option_id:Int,option_number:String,option_point:Int,isCorrect:Boolean): Observable<BaseResponse> {
+        return apiService.getTopicContentWiseAnswerUpdate(user_id,session_token,topic_id,topic_name,content_id,question_id,question,option_id,option_number,option_point,isCorrect)
+    }
+
+    fun saveCrashReportToServer(mCrash_Report_Save: Crash_Report_Save): Observable<BaseResponse> {
+        return apiService.saveCrashReportToServer(mCrash_Report_Save)
     }
 }

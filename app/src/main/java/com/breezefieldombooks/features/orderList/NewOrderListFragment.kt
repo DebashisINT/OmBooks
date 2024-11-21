@@ -1209,6 +1209,19 @@ class NewOrderListFragment : BaseFragment() {
             para.add(ph1)
             document.add(para)
 
+            if (!obj.remarks.isNullOrEmpty() ) {
+
+                val paraRmrk = Paragraph()
+                val glueRmrk = Chunk(VerticalPositionMark())
+                val phRmrk = Phrase()
+                val mainRmrk = Paragraph()
+                //ph1.add(Chunk("Rupees " + convertIntoWords(obj.amount!!.toDouble(), "en", "US")!!.toUpperCase() + " Only  ", font))
+                phRmrk.add(Chunk("Remarks: " + (obj.remarks)!!, font))
+                phRmrk.add(glueRmrk) // Here I add special chunk to the same phrase.
+                paraRmrk.add(phRmrk)
+                document.add(paraRmrk)
+            }
+
 //            val TotalAmountword = Paragraph("" + "\u20B9" + convertIntoWords(obj.amount!!.toDouble(),"en","US"), font)
 //            TotalAmountword.alignment = Element.ALIGN_LEFT
 //            TotalAmountword.spacingAfter = 2f

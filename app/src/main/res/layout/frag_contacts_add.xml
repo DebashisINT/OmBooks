@@ -58,7 +58,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:minHeight="@dimen/_30sdp"
-                            android:layout_gravity="center">
+                            android:layout_gravity="center"
+                            style="@style/ll_textinput_style">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/et_frag_cont_add_fname"
@@ -86,7 +87,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:minHeight="@dimen/_30sdp"
-                            android:layout_gravity="center">
+                            android:layout_gravity="center"
+                            style="@style/ll_textinput_style">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/et_frag_cont_add_lname"
                                 android:layout_width="match_parent"
@@ -138,7 +140,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:minHeight="@dimen/_30sdp"
-                            android:layout_gravity="center">
+                            android:layout_gravity="center"
+                            style="@style/ll_textinput_style">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/et_frag_cont_add_conpany_name"
                                 android:layout_width="match_parent"
@@ -208,7 +211,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:minHeight="@dimen/_30sdp"
-                            android:layout_gravity="center">
+                            android:layout_gravity="center"
+                            style="@style/ll_textinput_style">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/et_frag_cont_add_job_title"
                                 android:layout_width="match_parent"
@@ -262,7 +266,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:minHeight="@dimen/_30sdp"
-                            android:layout_gravity="center">
+                            android:layout_gravity="center"
+                            style="@style/ll_textinput_style">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/et_frag_cont_add_email"
                                 android:layout_width="match_parent"
@@ -317,7 +322,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:minHeight="@dimen/_30sdp"
-                            android:layout_gravity="center">
+                            android:layout_gravity="center"
+                            style="@style/ll_textinput_style">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/et_frag_cont_add_phone"
                                 android:layout_width="match_parent"
@@ -519,7 +525,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:minHeight="@dimen/_30sdp"
-                            android:layout_gravity="center">
+                            android:layout_gravity="center"
+                            style="@style/ll_textinput_style">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/et_frag_cont_add_phone_whatsapp"
                                 android:layout_width="match_parent"
@@ -576,7 +583,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:minHeight="@dimen/_30sdp"
-                            android:layout_gravity="center">
+                            android:layout_gravity="center"
+                            style="@style/ll_textinput_style">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/et_frag_cont_add_addr"
                                 android:layout_width="match_parent"
@@ -630,7 +638,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:minHeight="@dimen/_30sdp"
-                            android:layout_gravity="center">
+                            android:layout_gravity="center"
+                            style="@style/ll_textinput_style">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/et_frag_cont_add_pin"
                                 android:layout_width="match_parent"
@@ -1070,7 +1079,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:minHeight="@dimen/_30sdp"
-                            android:layout_gravity="center">
+                            android:layout_gravity="center"
+                            style="@style/ll_textinput_style">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/et_frag_cont_add_sale_value"
                                 android:layout_width="match_parent"
@@ -1367,7 +1377,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:minHeight="@dimen/_30sdp"
-                            android:layout_gravity="center">
+                            android:layout_gravity="center"
+                            style="@style/ll_textinput_style">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/et_frag_cont_add_remarks"
                                 android:layout_width="match_parent"

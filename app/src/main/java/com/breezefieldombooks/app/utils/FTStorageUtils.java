@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.breezefieldombooks.app.Pref;
+import com.breezefieldombooks.features.location.LocationFuzedService;
 import com.breezefieldombooks.features.location.model.ShopDurationRequestData;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -324,13 +325,16 @@ public class FTStorageUtils {
     public static boolean isMyServiceRunning(Class<?> serviceClass, Context mContext) {
         try {
             ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
-            Timber.d("TAG_CHECK_LOC_SERVICE_STATUS");
+           // Timber.d("TAG_CHECK_LOC_SERVICE_STATUS");
 
             for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
                 if (serviceClass.getName().equals(service.service.getClassName())) {
-                    Timber.d("TAG_CHECK_LOC_SERVICE_STATUS");
+                  //  Timber.d("TAG_CHECK_LOC_SERVICE_STATUS");
                     Timber.d("Service running status true");
-                    return true;
+                    //return true;
+                    if (service.foreground) {
+                        return true;
+                    }
                 }
             }
             Timber.d("Service running status false");

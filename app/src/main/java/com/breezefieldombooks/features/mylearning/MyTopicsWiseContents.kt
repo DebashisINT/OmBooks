@@ -75,7 +75,10 @@ class MyTopicsWiseContents : BaseFragment() , View.OnClickListener , MyLearningP
     private lateinit var ll_no_data: LinearLayout
     private lateinit var final_dataL: ArrayList<LarningList>
     var contentL: ArrayList<ContentL> = ArrayList()
+    var content_idL: ArrayList<String> = ArrayList()
     var isGridView:Boolean = false
+    var content_idListSize :Int =0
+    var contentWiseAnswerL : ArrayList<ContentWiseAnswerL> =ArrayList()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -102,8 +105,13 @@ class MyTopicsWiseContents : BaseFragment() , View.OnClickListener , MyLearningP
 
             if (!TextUtils.isEmpty(objects.toString())) {
                 val parts = objects.toString().split("~")
-                topic_id = parts[0]
-                topic_name = parts[1]
+                if (parts.size ==2) {
+                    topic_id = parts[0]
+                    topic_name = parts[1]
+                }else if (parts.size == 5){
+                    topic_id = parts[0]
+                    topic_name = parts[2]
+                }
             } else {
                 topic_id = ""
                 topic_name = ""
@@ -175,7 +183,10 @@ class MyTopicsWiseContents : BaseFragment() , View.OnClickListener , MyLearningP
                     rv_mylearning_progress.visibility =View.VISIBLE
                     ll_continue_learning.visibility =View.VISIBLE
                     ll_no_data.visibility =View.GONE
-                    setLearningData(tempSearchL,topic_name)
+                    setLearningData(
+                        tempSearchL,
+                        topic_name,
+                        contentWiseAnswerL/*, contentWiseAnswerL*/)
                 }else{
                     rv_mylearning_progress.visibility =View.GONE
                     ll_continue_learning.visibility =View.GONE
@@ -206,7 +217,7 @@ class MyTopicsWiseContents : BaseFragment() , View.OnClickListener , MyLearningP
 
             val sortedList = contentL.sortedBy { it.content_play_sequence.toInt() }.toCollection(ArrayList())
             Log.d("sortedList", "" + sortedList)
-            setLearningData(sortedList ,topic_name)
+            setLearningData(sortedList, topic_name, contentWiseAnswerL/*, contentWiseAnswerL*/)
         }
 
     }
@@ -217,7 +228,7 @@ class MyTopicsWiseContents : BaseFragment() , View.OnClickListener , MyLearningP
                 topic_id = CustomStatic.TOPIC_SEL
             }
             progress_wheel.visibility = View.VISIBLE
-            Timber.d("deleteImei call" + AppUtils.getCurrentDateTime())
+           // Timber.d("deleteImei call" + AppUtils.getCurrentDateTime())
             val repository = LMSRepoProvider.getTopicList()
             BaseActivity.compositeDisposable.add(
                 repository.getTopicsWiseVideo(Pref.user_id!!, topic_id)
@@ -232,10 +243,17 @@ class MyTopicsWiseContents : BaseFragment() , View.OnClickListener , MyLearningP
                                 if (response.content_list != null && response.content_list.size > 0) {
                                     var temp = response.content_list.distinctBy { it.content_id.toString() }
                                     contentL = temp as  ArrayList<ContentL>
+                                    content_idL = ArrayList()
+                                    content_idL = contentL.map { it.content_id.toString() } as ArrayList<String>
+                                    content_idListSize = contentL.size
                                     // Sort the content list by content_play_sequence
-                                    val sortedList = contentL.sortedBy { it.content_play_sequence.toInt() }.toCollection(ArrayList())
+
+                                   /* val sortedList = contentL.sortedBy { it.content_play_sequence.toInt() }.toCollection(ArrayList())
                                     Log.d("sortedList", "" + sortedList)
-                                    setLearningData(sortedList ,topic_name)
+                                    setLearningData(sortedList ,topic_name)*/
+
+                                    process()
+
                                 } else {
                                     Toast.makeText(mContext, "No video found", Toast.LENGTH_SHORT)
                                         .show()
@@ -245,7 +263,7 @@ class MyTopicsWiseContents : BaseFragment() , View.OnClickListener , MyLearningP
                             }
                         } else {
                             progress_wheel.visibility = View.GONE
-                            (mContext as DashboardActivity).showSnackMessage(getString(R.string.no_data_found))
+                           // (mContext as DashboardActivity).showSnackMessage(getString(R.string.no_data_found))
 
                         }
                     }, { error ->
@@ -261,7 +279,115 @@ class MyTopicsWiseContents : BaseFragment() , View.OnClickListener , MyLearningP
         }
     }
 
-    private fun setLearningData(finalDatal: ArrayList<ContentL>, topic_name: String) {
+    private fun process(){
+       // doAsync {
+
+            getTopicContentWiseAnswerListsAPICalling()
+
+           /* uiThread {
+                val sortedList = contentL.sortedBy { it.content_play_sequence.toInt() }.toCollection(ArrayList())
+                Log.d("sortedList", "" + sortedList)
+                setLearningData(sortedList ,topic_name , contentWiseAnswerL)
+            }*/
+      //  }
+    }
+
+    private fun getTopicContentWiseAnswerListsAPICalling(
+    ) {
+
+        if (content_idListSize>0){
+            try {
+                progress_wheel.visibility = View.VISIBLE
+                Log.d("deleteImei call","" + content_idListSize)
+                val repository = LMSRepoProvider.getTopicList()
+                BaseActivity.compositeDisposable.add(
+                    repository.getTopicContentWiseAnswerLists(Pref.user_id!!, topic_id , content_idL.get(content_idListSize-1))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe({ result ->
+                            val response = result as TopicContentWiseAnswerListsFetchResponse
+                            if (response.status == NetworkConstant.SUCCESS) {
+                                progress_wheel.visibility = View.GONE
+
+                                try {
+                                    var content_Id = response.content_id
+                                    for (i in 0.. response.question_answer_fetch_list.size-1){
+                                        contentWiseAnswerL.add(ContentWiseAnswerL(content_Id,response.question_answer_fetch_list.get(i).isCorrectAnswer))
+
+                                    }
+
+                                } catch (ex: Exception) {
+                                    ex.printStackTrace()
+                                }
+
+                                content_idListSize--
+
+                                getTopicContentWiseAnswerListsAPICalling()
+
+                            } else {
+                                progress_wheel.visibility = View.GONE
+                                (mContext as DashboardActivity).showSnackMessage(getString(R.string.something_went_wrong))
+
+                            }
+                        }, { error ->
+                            println("errortopicwiselist"+error.message)
+                            progress_wheel.visibility = View.GONE
+                            (mContext as DashboardActivity).showSnackMessage(getString(R.string.something_went_wrong))
+                        })
+                )
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+                progress_wheel.visibility = View.GONE
+                (mContext as DashboardActivity).showSnackMessage(getString(R.string.something_went_wrong))
+            }
+        }
+        else{
+            val sortedList = contentL.sortedBy { it.content_play_sequence.toInt() }.toCollection(ArrayList())
+            Log.d("sortedList", "" + sortedList)
+            setLearningData(sortedList ,topic_name , contentWiseAnswerL)
+        }
+
+
+      /*  val repository = LMSRepoProvider.getTopicList()
+
+        // Use forEach to iterate through content_idL
+        content_idL.forEach { contentId ->
+            // Create a disposable for each request
+            val disposable = repository.getTopicContentWiseAnswerLists(Pref.user_id!!, topic_id, contentId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError { error ->
+                    // Log the error and show a message for each failure
+                    Log.e("TopicWiseListError", error.message ?: "Unknown error")
+                    (mContext as DashboardActivity).showSnackMessage(getString(R.string.something_went_wrong))
+                }
+                .subscribe({ result ->
+                    val response = result as TopicContentWiseAnswerListsFetchResponse
+                    if (response.status == NetworkConstant.SUCCESS) {
+                        // Handle success case here
+                        // (Your success handling code goes here)
+                    } else {
+                        (mContext as DashboardActivity).showSnackMessage(getString(R.string.something_went_wrong))
+                    }
+                }, { error ->
+                    // Handle error from subscribe directly if needed
+                    Log.e("TopicWiseListError", error.message ?: "Unknown error")
+                    (mContext as DashboardActivity).showSnackMessage(getString(R.string.something_went_wrong))
+                })
+
+            // Add the disposable to the composite
+            BaseActivity.compositeDisposable.add(disposable)
+        }*/
+
+
+    }
+
+    private fun setLearningData(
+        finalDatal: ArrayList<ContentL>,
+        topic_name: String,
+        contentWiseAnswerL: ArrayList<ContentWiseAnswerL>
+        /*  contentWiseAnswerL: ArrayList<ContentWiseAnswerL>*/
+    ) {
 
         if (isGridView){
 
@@ -288,9 +414,11 @@ class MyTopicsWiseContents : BaseFragment() , View.OnClickListener , MyLearningP
             gv_topic_search.setAdapter(adapter)
             rv_mylearning_progress.visibility =View.GONE
             gv_topic_search.visibility =View.VISIBLE
-        }else {
+        }
+
+        else {
             rv_mylearning_progress.layoutManager = LinearLayoutManager(mContext)
-            val adapter = MyLearningProgressAdapter(mContext, finalDatal, topic_name, this)
+            val adapter = MyLearningProgressAdapter(mContext, finalDatal, topic_name, this , contentWiseAnswerL)
             rv_mylearning_progress.adapter = adapter
             rv_mylearning_progress.visibility =View.VISIBLE
             gv_topic_search.visibility =View.GONE
@@ -336,7 +464,10 @@ class MyTopicsWiseContents : BaseFragment() , View.OnClickListener , MyLearningP
                             rv_mylearning_progress.visibility =View.VISIBLE
                             ll_continue_learning.visibility =View.VISIBLE
                             ll_no_data.visibility =View.GONE
-                            setLearningData(tempSearchL, topic_name)
+                            setLearningData(
+                                tempSearchL,
+                                topic_name,
+                                contentWiseAnswerL/*, contentWiseAnswerL*/)
                         }else{
                             rv_mylearning_progress.visibility =View.GONE
                             ll_continue_learning.visibility =View.GONE
@@ -414,10 +545,16 @@ class MyTopicsWiseContents : BaseFragment() , View.OnClickListener , MyLearningP
         val store_topic_name = topic_name
         val store_content_id = item.content_id
         //getwiselistAPIcalling(store_topic_id.toInt(),store_content_id.toInt(),store_topic_name)
-        //VideoPlayLMS.loadedFrom = "MyTopicsWiseContents"
+        VideoPlayLMS.loadedFrom = "MyTopicsWiseContents"
         CustomStatic.VideoPosition = position
         //Pref.videoCompleteCount = "0"
-        (mContext as DashboardActivity).loadFragment(FragType.RetryIncorrectQuizFrag, true, topic_id +"~"+ store_content_id /*+"~"+position*/)
+        CustomStatic.RetryTopicId = topic_id.toInt()
+        CustomStatic. RetryTopicName= topic_name
+        CustomStatic.RetryContentId = store_content_id.toInt()
+        CustomStatic.RetryContentName = item.content_title
+        CustomStatic.RetryContentURL = item.content_url
+
+        (mContext as DashboardActivity).loadFragment(FragType.RetryIncorrectQuizFrag, true, topic_id +"~"+ store_content_id +"~"+topic_name + "~"+item.content_url +"~"+item.content_title+"~"+item.content_thumbnail)
 
 
     }

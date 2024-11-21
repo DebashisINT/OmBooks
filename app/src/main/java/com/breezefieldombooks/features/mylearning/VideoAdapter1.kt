@@ -93,7 +93,6 @@ class VideoAdapter1(var viewPager2: ViewPager2,
     private lateinit var wakeLock: PowerManager.WakeLock
     private var currentPlayingViewHolder: VideoViewHolder? = null
     private lateinit var popupWindow: PopupWindow
-    private var shouldShowPopup: Boolean = true
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.list_video, parent, false)
@@ -476,7 +475,7 @@ class VideoAdapter1(var viewPager2: ViewPager2,
                         if(CustomStatic.IsHomeClick == true){
                             CustomStatic.IsHomeClick = false
                         }else{
-                            if (shouldShowPopup) {
+                            if (Pref.LastVideoPlay_VidPosition.toInt() == absoluteAdapterPosition && CustomStatic.IsQuestionPageOpen == false) {
                                 showWatchPointPopup(absoluteAdapterPosition, content_watch_point)
                             }
                         }

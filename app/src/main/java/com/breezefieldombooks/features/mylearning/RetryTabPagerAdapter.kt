@@ -1,5 +1,6 @@
 package com.breezefieldombooks.features.mylearning
 
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -8,7 +9,12 @@ import com.breezefieldombooks.CorrectQuesAnsFrag
 import com.breezefieldombooks.features.orderhistory.model.ActionFeed
 
 
-class RetryTabPagerAdapter(fm: FragmentManager?, val topic_id: String, val store_content_id: String) : FragmentStatePagerAdapter(fm!!), ActionFeed {
+class RetryTabPagerAdapter(
+    fm: FragmentManager?,
+    val topic_id: String,
+    val store_content_id: String,
+    val store_content_url: String
+) : FragmentStatePagerAdapter(fm!!), ActionFeed {
 
     override fun refresh() {
         notifyDataSetChanged()
@@ -18,13 +24,13 @@ class RetryTabPagerAdapter(fm: FragmentManager?, val topic_id: String, val store
     override fun getItem(position: Int): Fragment {
 
             return when (position) {
-                0 -> {
+                /*0 -> {
+                    InCorrectQuesAnsFrag.getInstance(topic_id, store_content_id , store_content_url)
+                }*/
+               /* 1 -> {
                     CorrectQuesAnsFrag.getInstance(topic_id, store_content_id)
-                }
-                1 -> {
-                    InCorrectQuesAnsFrag.getInstance(topic_id, store_content_id)
-                }
-                else -> Fragment()
+                }*/
+            else -> Fragment()
             }
 
     }

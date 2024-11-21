@@ -262,6 +262,7 @@
                     <Switch
                         android:id="@+id/toggle_view"
                         android:layout_width="wrap_content"
+                        android:visibility="gone"
                         android:layout_height="wrap_content"/>
 
                 </LinearLayout>
@@ -278,7 +279,7 @@
                         android:layout_marginStart="@dimen/_10sdp"
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_width="match_parent"
-                        android:layout_marginTop="@dimen/_2sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
                         android:layout_height="match_parent"/>
 
                     <!--on below line we are creating a grid view-->

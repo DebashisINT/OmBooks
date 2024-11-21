@@ -22,7 +22,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.EditText
@@ -177,6 +176,17 @@ class VideoPlayLMS : BaseFragment() {
         // Inflate the layout with the appropriate theme
         val localInflater = inflater.cloneInContext(contextThemeWrapper)
         val view = localInflater.inflate(R.layout.fragment_video_play_l_m_s, container, false)
+
+      /*  val vimeoPlayerView: VimeoPlayerView = findViewById(R.id.vimeoPlayerView)
+        vimeoPlayerView.initialize(true, 12345678) // Replace with your video ID
+
+        vimeoPlayerView.addVimeoPlayerReadyListener(object : VimeoPlayer.VimeoPlayerReadyListener {
+            override fun onReady(vimeoPlayer: VimeoPlayer) {
+                // You can control the player here
+                vimeoPlayer.play()
+            }
+        })*/
+
         initView(view)
         return view
     }
@@ -235,7 +245,7 @@ class VideoPlayLMS : BaseFragment() {
     fun getVideoTopicWise() {
         try {
             progressWheel.visibility = View.VISIBLE
-            Timber.d("deleteImei call" + AppUtils.getCurrentDateTime())
+            //Timber.d("deleteImei call" + AppUtils.getCurrentDateTime())
             val repository = LMSRepoProvider.getTopicList()
             BaseActivity.compositeDisposable.add(
                 repository.getTopicsWiseVideo(Pref.user_id!!,topic_id)
@@ -972,6 +982,8 @@ class VideoPlayLMS : BaseFragment() {
             //code start for Sequentially load question after watch complete of related content
             if (Pref.videoCompleteCount.toInt() % Pref.QuestionAfterNoOfContentForLMS.toInt() == 0) {
                 //load question
+                println("tag_qaprocess 1")
+                CustomStatic.IsQuestionPageOpen =true
                 question_ans_setL = ArrayList()
                 for (i in Pref.videoCompleteCount.toInt() - 1 downTo (Pref.videoCompleteCount.toInt() - Pref.QuestionAfterNoOfContentForLMS.toInt())) {
                     if (sequenceQuestionL.get(i).completionStatus == false) {
@@ -979,10 +991,13 @@ class VideoPlayLMS : BaseFragment() {
                         question_ans_setL.addAll(questionRootObj)
                     }
                 }
-                if (question_ans_setL.size > 0) {
+                if (question_ans_setL.size > 0 ) {
                     LmsQuestionAnswerSet.topic_name = topic_name
                     val videoPlayLMS = (context as DashboardActivity).supportFragmentManager.findFragmentByTag("VideoPlayLMS") as VideoPlayLMS
                     videoPlayLMS.stopVideoPlayback()
+                    CustomStatic.IsQuestionPageOpen =false
+                    println("tag_qaprocess 2")
+
                     (context as DashboardActivity).loadFragment(
                         FragType.LmsQuestionAnswerSet,
                         true,
@@ -990,10 +1005,16 @@ class VideoPlayLMS : BaseFragment() {
                     )
 
                 }
+                else{
+                    CustomStatic.IsQuestionPageOpen =false
+                    println("tag_qaprocess 3")
+
+                }
             }
             //code end for Sequentially load question after watch complete of related content
 
-        } catch (e: Exception) {
+        }
+    catch (e: Exception) {
             e.printStackTrace()
         }
 
@@ -1009,7 +1030,11 @@ class VideoPlayLMS : BaseFragment() {
             player.pause()
             //player.release()
         }
-        adapter.pauseCurrentVideo()
+        if (Pref.IsVideoAutoPlayInLMS) {
+            adapter.pauseCurrentVideo()
+        }else{
+            adapter1.pauseCurrentVideo()
+        }
         // Release video resources
         if (exoPlayerItems.isNotEmpty()) {
             for (item in exoPlayerItems) {
@@ -1224,7 +1249,7 @@ class VideoPlayLMS : BaseFragment() {
     private fun saveContentWiseInfo(obj: LMS_CONTENT_INFO) {
         try {
             progressWheel.visibility = View.VISIBLE
-            Timber.d("saveContentWiseInfo call" + obj)
+           // Timber.d("saveContentWiseInfo call" + obj)
             val repository = LMSRepoProvider.getTopicList()
             BaseActivity.compositeDisposable.add(
                 repository.saveContentInfoApi(obj)
@@ -1263,8 +1288,11 @@ class VideoPlayLMS : BaseFragment() {
             player.pause()
             player.release()
         }
-
-        adapter.pauseCurrentVideo()
+        if (Pref.IsVideoAutoPlayInLMS){
+            adapter.pauseCurrentVideo()
+    }else{
+            adapter1.pauseCurrentVideo()
+        }
 
     }
 
@@ -1358,7 +1386,7 @@ class VideoPlayLMS : BaseFragment() {
     //Code end for comment icon click functionality update comment list
     private fun commentAPICalling(content_id: String) {
         try {
-            Timber.d("deleteImei call" + AppUtils.getCurrentDateTime())
+           // Timber.d("deleteImei call" + AppUtils.getCurrentDateTime())
             val repository = LMSRepoProvider.getTopicList()
             BaseActivity.compositeDisposable.add(
                 repository.getCommentInfo(topic_id,content_id )
@@ -1417,7 +1445,7 @@ class VideoPlayLMS : BaseFragment() {
     private fun saveContentWiseInfoFOrComment(obj: LMS_CONTENT_INFO) {
         try {
             progressWheel.visibility = View.VISIBLE
-            Timber.d("saveContentWiseInfo call" + obj)
+           // Timber.d("saveContentWiseInfo call" + obj)
             val repository = LMSRepoProvider.getTopicList()
             BaseActivity.compositeDisposable.add(
                 repository.saveContentInfoApi(obj)
@@ -1494,7 +1522,7 @@ class VideoPlayLMS : BaseFragment() {
     //Code start for geting like,comment points
     private fun getPointsAPICalling() {
         try {
-            Timber.d("deleteImei call" + AppUtils.getCurrentDateTime())
+            //Timber.d("deleteImei call" + AppUtils.getCurrentDateTime())
             val repository = LMSRepoProvider.getTopicList()
             BaseActivity.compositeDisposable.add(
                 repository.overAllDatalist(Pref.session_token!!)
@@ -1566,7 +1594,7 @@ class VideoPlayLMS : BaseFragment() {
     private fun contentCountSaveAPICalling() {
 
         try {
-            Timber.d("contentCountSaveAPICalling call" + AppUtils.getCurrentDateTime())
+          //  Timber.d("contentCountSaveAPICalling call" + AppUtils.getCurrentDateTime())
 
             var obj = ContentCountSave_Data()
             obj.user_id = Pref.user_id.toString()

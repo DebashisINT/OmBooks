@@ -106,4 +106,12 @@ public class CustomStatic {
 
     public static Boolean LMSMyPerformanceFromMenu = false;
 
+    public static Boolean IsQuestionPageOpen = false;
+
+    public static Integer RetryTopicId = 0;
+    public static String RetryTopicName = "";
+    public static Integer RetryContentId = 0;
+    public static String RetryContentName = "";
+    public static String RetryContentURL ="";
+
 }

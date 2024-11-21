@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.row_quto_multi_cont.view.*
 class AdapterMultiContactQuto(private var context: Context, private var prodList: ArrayList<ShopExtraContactEntity>, var listner: OnClickListener) :
     RecyclerView.Adapter<AdapterMultiContactQuto.ShowMultiContViewHolder>() {
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowMultiContViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.row_quto_multi_cont, parent, false)
         return ShowMultiContViewHolder(view)

@@ -757,7 +757,7 @@ class LeaderboardLmsFrag : BaseFragment(), View.OnClickListener {
                         ll_subBranch.isEnabled = true
                     },1000)
                 }
-                //duration filter
+
                 ll_durationFilter2.setOnClickListener {
                     ll_durationFilter2.isEnabled = false
                     var mFilterbranchData = ArrayList<LeaderBoardFilterOnDurationData>()
@@ -792,11 +792,6 @@ class LeaderboardLmsFrag : BaseFragment(), View.OnClickListener {
                 (mContext as DashboardActivity).loadFragment(FragType.SearchLmsFrag, true, "")
                 popupWindow.dismiss()
             }
-
-            /*ll_lms_leaderboard.id -> {
-                (mContext as DashboardActivity).loadFragment(FragType.MyLearningFragment, true, "")
-                popupWindow.dismiss()
-            }*/
 
             ll_lms_knowledgehub.id -> {
                 (mContext as DashboardActivity).loadFragment(FragType.SearchLmsKnowledgeFrag, true, "")

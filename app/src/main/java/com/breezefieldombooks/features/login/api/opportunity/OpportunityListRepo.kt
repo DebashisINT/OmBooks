@@ -4,6 +4,10 @@ import com.breezefieldombooks.app.Pref
 import com.breezefieldombooks.app.utils.AppUtils
 import com.breezefieldombooks.base.BaseResponse
 import com.breezefieldombooks.features.addshop.model.AudioFetchDataCLass
+import com.breezefieldombooks.features.addshop.model.LoanDetailFetchListsResponse
+import com.breezefieldombooks.features.addshop.model.LoanDispositionListsResponse
+import com.breezefieldombooks.features.addshop.model.LoanFinalStatusListsResponse
+import com.breezefieldombooks.features.addshop.model.LoanRiskTypeListsResponse
 import com.breezefieldombooks.features.addshop.model.StockAllResponse
 import com.breezefieldombooks.features.dashboard.presentation.DashboardActivity
 import com.breezefieldombooks.features.login.model.opportunitymodel.OpportunityStatusListResponseModel
@@ -48,5 +52,21 @@ class OpportunityListRepo(val apiService: OpportunityListApi) {
 
     fun getAllStock(user_id: String): Observable<StockAllResponse> {
         return apiService.getAllStockApi(user_id)
+    }
+
+    fun getLoanRiskTypeLists(user_id: String): Observable<LoanRiskTypeListsResponse> {
+        return apiService.getLoanRiskTypeLists(user_id)
+    }
+
+    fun getLoanDispositionLists(user_id: String): Observable<LoanDispositionListsResponse> {
+        return apiService.getLoanDispositionLists(user_id)
+    }
+
+    fun getLoanFinalStatusLists(user_id: String): Observable<LoanFinalStatusListsResponse> {
+        return apiService.getLoanFinalStatusLists(user_id)
+    }
+
+    fun getLoanDetailFetch(user_id: String): Observable<LoanDetailFetchListsResponse> {
+        return apiService.getLoanDetailFetch(user_id)
     }
 }

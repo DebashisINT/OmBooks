@@ -11,6 +11,7 @@ import com.breezefieldombooks.features.mylearning.BookmarkFetchResponse
 import com.breezefieldombooks.features.mylearning.BookmarkResponse
 import com.breezefieldombooks.features.mylearning.CONTENT_WISE_QA_SAVE
 import com.breezefieldombooks.features.mylearning.ContentCountSave_Data
+import com.breezefieldombooks.features.mylearning.Crash_Report_Save
 import com.breezefieldombooks.features.mylearning.LMSLeaderboardOverAllData
 import com.breezefieldombooks.features.mylearning.LMSLeaderboardOwnData
 import com.breezefieldombooks.features.mylearning.LMS_CONTENT_INFO
@@ -78,6 +79,15 @@ interface LMSApi {
     @FormUrlEncoded
     @POST("LMSInfoDetails/TopicContentWiseAnswerLists")
     fun getTopicContentWiseAnswerLists(@Field("user_id") user_id: String,@Field("topic_id") topic_id: String,@Field("content_id") content_id: String): Observable<TopicContentWiseAnswerListsFetchResponse>
+
+    @FormUrlEncoded
+    @POST("LMSInfoDetails/TopicContentWiseAnswerUpdate")
+    fun getTopicContentWiseAnswerUpdate(@Field("user_id") user_id: String,@Field("session_token") session_token: String,@Field("topic_id") topic_id: Int,@Field("topic_name") topic_name: String,@Field("content_id") content_id: Int,@Field("question_id") question_id: Int,@Field("question") question: String,@Field("option_id") option_id: Int,
+                                        @Field("option_number") option_number: String ,@Field("option_point") option_point: Int, @Field("isCorrect") isCorrect: Boolean): Observable<BaseResponse>
+
+
+    @POST("LMSInfoDetails/UserWiseAPPCrashDetails")
+    fun saveCrashReportToServer(@Body mCrash_Report_Save: Crash_Report_Save): Observable<BaseResponse>
 
     companion object Factory {
         fun create(): LMSApi {

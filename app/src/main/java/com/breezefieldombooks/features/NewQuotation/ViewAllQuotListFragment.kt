@@ -1064,6 +1064,7 @@ class ViewAllQuotListFragment : BaseFragment(), View.OnClickListener {
                     }*/
                 }
             }
+
             /*     if (!TextUtils.isEmpty(sendingPath)) {
                      try {
                          val shareIntent = Intent(Intent.ACTION_SEND)

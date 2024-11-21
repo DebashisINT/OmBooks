@@ -78,7 +78,6 @@ class DayWiseFragment : BaseFragment(), View.OnClickListener {
     private lateinit var tv_share_logs: AppCustomTextView
     private lateinit var tv_sync_all: AppCustomTextView
     private lateinit var ll_visit_distance: LinearLayout
-    private lateinit var ll_approx_distance: LinearLayout
     private lateinit var tv_visit_distance: AppCustomTextView
     private lateinit var tv_share_pdf: AppCustomTextView
 
@@ -432,15 +431,10 @@ class DayWiseFragment : BaseFragment(), View.OnClickListener {
         tv_share_logs = view.findViewById(R.id.tv_share_logs)
         tv_sync_all = view.findViewById(R.id.tv_sync_all)
         ll_visit_distance = view.findViewById(R.id.ll_visit_distance)
-        ll_approx_distance = view.findViewById(R.id.ll_approx_distance)
         tv_visit_distance = view.findViewById(R.id.tv_visit_distance)
         tv_share_pdf = view.findViewById(R.id.tv_share_pdf)
 
-        if(Pref.loginID.equals("breezefsm",ignoreCase = true)) {
-            tv_share_pdf.visibility = View.GONE
-        }
-
-            if (Pref.isAttendanceDistanceShow) {
+        if (Pref.isAttendanceDistanceShow) {
             ll_visit_distance.visibility = View.VISIBLE
         }
         else{
@@ -449,11 +443,9 @@ class DayWiseFragment : BaseFragment(), View.OnClickListener {
         //begin mantis id 0027255 AdditionalInfoRequiredForTimelines functionality Puja 20-02-2024
         if (Pref.AdditionalInfoRequiredForTimelines) {
             ll_visit_distance.visibility = View.VISIBLE
-            ll_approx_distance.visibility = View.VISIBLE
         }
         else{
             ll_visit_distance.visibility = View.GONE
-            ll_approx_distance.visibility = View.GONE
         }
         //end mantis id 0027255 AdditionalInfoRequiredForTimelines functionality Puja 20-02-2024
         pickDate.setOnClickListener(this)
@@ -495,7 +487,7 @@ class DayWiseFragment : BaseFragment(), View.OnClickListener {
         val finalDistance = String.format("%.2f", totalDistance)
         tv_total_distance.text = "$finalDistance Km(s)"
 
-        try {
+/*        try {
             var dt = AppUtils.getFormattedDateString(myCalendar)
             println("tag_dt_sel $dt")
             val dist = AppDatabase.getDBInstance()!!.userLocationDataDao().getTotalDistForDay(AppUtils.getFormattedDateString(myCalendar)).toString().toDouble()
@@ -504,7 +496,7 @@ class DayWiseFragment : BaseFragment(), View.OnClickListener {
         }catch (ex:Exception){
             ex.printStackTrace()
             tv_total_distance.text = "$finalDistance Km(s)"
-        }
+        }*/
 
         (mContext as DashboardActivity).activityLocationList = list
 

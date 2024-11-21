@@ -41,7 +41,7 @@ class AdapterBookmarkedprivate (val mContext: Context, private val mList: ArrayL
                     .into(itemView.iv_row_book_img)
             }
             else{
-                itemView.perform_thumbnail.setImageResource(R.drawable.ic_image)
+                itemView.iv_row_book_img.setImageResource(R.drawable.ic_image)
             }
             itemView.tv_row_book_content_title.text = mList.get(adapterPosition).content_name
             itemView.tv_row_book_content_desc.text = mList.get(adapterPosition).content_desc

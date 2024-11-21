@@ -34,12 +34,21 @@ import kotlinx.android.synthetic.main.row_contact_list.view.ll_contacStatus
 import kotlinx.android.synthetic.main.row_contact_list.view.ll_expected_sales_value
 import kotlinx.android.synthetic.main.row_contact_list.view.ll_goneView
 import kotlinx.android.synthetic.main.row_contact_list.view.ll_headView
+import kotlinx.android.synthetic.main.row_contact_list.view.ll_row_cont_coll_amt_root
+import kotlinx.android.synthetic.main.row_contact_list.view.ll_row_cont_coll_date_root
+import kotlinx.android.synthetic.main.row_contact_list.view.ll_row_cont_disposition_root
+import kotlinx.android.synthetic.main.row_contact_list.view.ll_row_cont_final_status_root
+import kotlinx.android.synthetic.main.row_contact_list.view.ll_row_cont_ptp_amt_root
+import kotlinx.android.synthetic.main.row_contact_list.view.ll_row_cont_ptp_date_root
+import kotlinx.android.synthetic.main.row_contact_list.view.ll_row_cont_risk_root
+import kotlinx.android.synthetic.main.row_contact_list.view.ll_row_cont_workable_root
 import kotlinx.android.synthetic.main.row_contact_list.view.ll_row_contact_addr_root
 import kotlinx.android.synthetic.main.row_contact_list.view.ll_row_contact_list_auto_activity
 import kotlinx.android.synthetic.main.row_contact_list.view.ll_row_contact_list_order_show
 import kotlinx.android.synthetic.main.row_contact_list.view.ll_row_contact_list_update_addr
 import kotlinx.android.synthetic.main.row_contact_list.view.ll_row_contact_list_will_activity_show
 import kotlinx.android.synthetic.main.row_contact_list.view.ll_row_contact_list_will_direction
+import kotlinx.android.synthetic.main.row_contact_list.view.ll_row_contact_loan_dtls_root
 import kotlinx.android.synthetic.main.row_contact_list.view.ll_row_opportunity_show
 import kotlinx.android.synthetic.main.row_contact_list.view.ll_souce
 import kotlinx.android.synthetic.main.row_contact_list.view.ll_stage_1
@@ -321,6 +330,29 @@ class AdapterContactList(var mContext:Context,var shopL:ArrayList<AddShopDBModel
                 }
                 ll_assignedTo.setOnClickListener {
                     listner.onAssignToUpdateClick(shopL.get(adapterPosition))
+                }
+
+                //Suman 15-11-2024 mantis id 27805
+                if(Pref.WillShowLoanDetailsInParty){
+                    ll_row_contact_loan_dtls_root.visibility = View.VISIBLE
+                    ll_row_cont_risk_root.visibility = View.VISIBLE
+                    ll_row_cont_workable_root.visibility = View.VISIBLE
+                    ll_row_cont_disposition_root.visibility = View.VISIBLE
+                    ll_row_cont_ptp_date_root.visibility = View.VISIBLE
+                    ll_row_cont_ptp_amt_root.visibility = View.VISIBLE
+                    ll_row_cont_coll_date_root.visibility = View.VISIBLE
+                    ll_row_cont_coll_amt_root.visibility = View.VISIBLE
+                    ll_row_cont_final_status_root.visibility = View.VISIBLE
+                }else{
+                    ll_row_contact_loan_dtls_root.visibility = View.GONE
+                    ll_row_cont_risk_root.visibility = View.GONE
+                    ll_row_cont_workable_root.visibility = View.GONE
+                    ll_row_cont_disposition_root.visibility = View.GONE
+                    ll_row_cont_ptp_date_root.visibility = View.GONE
+                    ll_row_cont_ptp_amt_root.visibility = View.GONE
+                    ll_row_cont_coll_date_root.visibility = View.GONE
+                    ll_row_cont_coll_amt_root.visibility = View.GONE
+                    ll_row_cont_final_status_root.visibility = View.GONE
                 }
         }
     }

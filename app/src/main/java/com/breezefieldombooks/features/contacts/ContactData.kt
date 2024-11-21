@@ -37,3 +37,10 @@ data class CompanyName(var company_name:String="")
 data class AutoMailDtls(var automail_sending_email:String="",var automail_sending_pass:String="",var recipient_email_ids:String=""):BaseResponse()
 
 data class ProductDtls(var product_id:String="",var product_name:String="",var isTick:Boolean = false)
+
+data class TargetTypeResponse(var target_type_list:ArrayList<TargetTypeDtls> = ArrayList()):BaseResponse()
+data class TargetLevelResponse(var target_level_list:ArrayList<TargetTypeDtls> = ArrayList()):BaseResponse()
+
+data class TargetTypeDtls(var id:Int=0,var name:String="")
+
+

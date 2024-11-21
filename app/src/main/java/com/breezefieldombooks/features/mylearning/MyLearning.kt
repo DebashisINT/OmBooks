@@ -63,3 +63,8 @@ data class LMSOverallUserListData(var user_id:Int ,var user_name:String,var user
                                var position:Int,var totalscore:Int,var profile_pictures_url:String)
 
 data class SectionsPointsList(var content_watch_point:Int=0,var content_like_point:Int=0,var content_share_point:Int=0,var content_comment_point:Int =0, var topic_parcentage:Int=0):BaseResponse()
+data class ContentWiseAnswerL(var content_id:Int=0,var isCorrectAnswer:Boolean=false):BaseResponse()
+
+data class Crash_Report_Save(var user_id:String = "",var crash_report_save_list:ArrayList<Crash_Report_Save_Data> = ArrayList())
+
+data class Crash_Report_Save_Data(var errorMessage:String="",var stackTrace:String="",var date_time:String="",var device:String="",var os_version:String="",var app_version:String="",var user_remarks:String="")

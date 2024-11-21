@@ -277,9 +277,9 @@ class AddAttendanceFragment : Fragment(), View.OnClickListener, DatePickerDialog
         locationList()
         //getWorkTypeListApi()
 
-        Handler().postDelayed(Runnable {
+       /* Handler().postDelayed(Runnable {
             Timber.d("addAttend_check ${AppUtils.getCurrentDateTime()} ${Pref.current_latitude} ${Pref.current_latitude}")
-        }, 1500)
+        }, 1500)*/
 
         if(AppUtils.getSharedPreferencesIsFaceDetection(mContext)){
             initPermissionCheckStart()
@@ -324,7 +324,7 @@ class AddAttendanceFragment : Fragment(), View.OnClickListener, DatePickerDialog
                 }
 
                 override fun onNewLocationAvailable(location: Location) {
-                    Timber.d("AddAttend onNewLocationAvailable")
+                   // Timber.d("AddAttend onNewLocationAvailable")
                     println("AddAttend_tag onNewLocationAvailable")
                     Pref.current_latitude = location.latitude.toString()
                     Pref.current_longitude = location.longitude.toString()
@@ -1346,14 +1346,14 @@ class AddAttendanceFragment : Fragment(), View.OnClickListener, DatePickerDialog
 
     fun getLocforStart() {
         //start Rev 11.0	AddAttendanceFragment AppV 4.1.3 Saheli    10/07/2023  0026539: log update in attendance module
-        Timber.d("------enter to getLocforStart -----")
+       // Timber.d("------enter to getLocforStart -----")
         //end Rev 11.0	AddAttendanceFragment AppV 4.1.3 Saheli    10/07/2023  0026539: log update in attendance module
             if (AppUtils.isOnline(mContext)) {
                 if (AppUtils.mLocation != null) {
                     if (AppUtils.mLocation!!.accuracy <= Pref.gpsAccuracy.toInt()) {
                         if (AppUtils.mLocation!!.accuracy <= Pref.shopLocAccuracy.toFloat()) {
                             //start Rev 11.0	AddAttendanceFragment AppV 4.1.3 Saheli    10/07/2023  0026539: log update in attendance module
-                            Timber.d("------enter to near by shoplist DD------")
+                           // Timber.d("------enter to near by shoplist DD------")
                             //end Rev 11.0	AddAttendanceFragment AppV 4.1.3 Saheli    10/07/2023  0026539: log update in attendance module
                             getNearyShopListDD(AppUtils.mLocation!!)
                         } else {
@@ -1456,7 +1456,7 @@ class AddAttendanceFragment : Fragment(), View.OnClickListener, DatePickerDialog
                     //val isShopNearby = FTStorageUtils.checkShopPositionWithinRadious(location, shopLocation, LocationWizard.NEARBY_RADIUS)
                     val isShopNearby = FTStorageUtils.checkShopPositionWithinRadious(location, shopLocation, Pref.DistributorGPSAccuracy.toInt())
                     //start Rev 11.0	AddAttendanceFragment AppV 4.1.3 Saheli    10/07/2023  0026539: log update in attendance module
-                    Timber.d("------isShopNearby avalibale------{$isShopNearby}")
+                   // Timber.d("------isShopNearby avalibale------{$isShopNearby}")
                     //end Rev 11.0	AddAttendanceFragment AppV 4.1.3 Saheli    10/07/2023  0026539: log update in attendance module
                     var dist=location.distanceTo(shopLocation).toInt()  //21-10-2021
                     if (isShopNearby) {
@@ -1497,7 +1497,7 @@ class AddAttendanceFragment : Fragment(), View.OnClickListener, DatePickerDialog
                     var dist=location.distanceTo(ddLocation).toInt()  //21-10-2021
                     if (isShopNearby) {
                         //start Rev 11.0	AddAttendanceFragment AppV 4.1.3 Saheli    10/07/2023  0026539: log update in attendance module
-                        Timber.d("------isShopNearby avalibale allDD------{$isShopNearby}")
+                       // Timber.d("------isShopNearby avalibale allDD------{$isShopNearby}")
                         //end Rev 11.0	AddAttendanceFragment AppV 4.1.3 Saheli    10/07/2023  0026539: log update in attendance module
                         if ((location.distanceTo(ddLocation)) < nearBy) {
                             nearBy = location.distanceTo(ddLocation).toDouble()
@@ -1640,7 +1640,7 @@ class AddAttendanceFragment : Fragment(), View.OnClickListener, DatePickerDialog
         when (view?.id) {
             R.id.tv_attendance_submit -> {
                 //start Rev 11.0	AddAttendanceFragment AppV 4.1.3 Saheli    10/07/2023  0026539: log update in attendance module
-                Timber.d("------enter attendance to onClick------")
+               // Timber.d("------enter attendance to onClick------")
                 //end Rev 11.0	AddAttendanceFragment AppV 4.1.3 Saheli    10/07/2023  0026539: log update in attendance module
                 AppUtils.hideSoftKeyboard(mContext as DashboardActivity)
                 if(Pref.IsShowDayStart){
@@ -1917,7 +1917,7 @@ class AddAttendanceFragment : Fragment(), View.OnClickListener, DatePickerDialog
                 .subscribe({ result ->
                     val response = result as TeamListResponseModel
 //                    Timber.d("GET TEAM DATA : " + "RESPONSE : " + response.status + "\n" + "Time : " + AppUtils.getCurrentDateTime() + ", USER :" + Pref.user_name + ",MESSAGE : " + response.message)
-                    Timber.d("GET TEAM DATA : " + "RESPONSE : " + response.status + "\n" + "Time : " + AppUtils.getCurrentDateTime() + ", USER :" + Pref.user_name + ",MESSAGE : " + response.message)
+                   // Timber.d("GET TEAM DATA : " + "RESPONSE : " + response.status + "\n" + "Time : " + AppUtils.getCurrentDateTime() + ", USER :" + Pref.user_name + ",MESSAGE : " + response.message)
                     if (response.status == NetworkConstant.SUCCESS) {
                         progress_wheel.stopSpinning()
                         if (response.member_list != null && response.member_list!!.size > 0) {
@@ -2118,14 +2118,14 @@ class AddAttendanceFragment : Fragment(), View.OnClickListener, DatePickerDialog
 
     private fun visibilityCheck() {
         //start Rev 11.0	AddAttendanceFragment AppV 4.1.3 Saheli    10/07/2023  0026539: log update in attendance module
-        Timber.d("------enter to visibilityCheck ------")
+       // Timber.d("------enter to visibilityCheck ------")
         //end Rev 11.0	AddAttendanceFragment AppV 4.1.3 Saheli    10/07/2023  0026539: log update in attendance module
         // 4.0 AddAttendanceFragment AppV 4.0.8 Suman    07/04/2023 Attendance beat selection validation updation mantis 0025782
         var isBeatPresent = false
         if(Pref.IsBeatRouteAvailableinAttendance){
             val bList = AppDatabase.getDBInstance()?.beatDao()?.getAll() as ArrayList<BeatEntity>
             //start Rev 11.0	AddAttendanceFragment AppV 4.1.3 Saheli    10/07/2023  0026539: log update in attendance module
-            Timber.d("------IsBeatRouteAvailableinAttendance ${Pref.IsBeatRouteAvailableinAttendance}------")
+           // Timber.d("------IsBeatRouteAvailableinAttendance ${Pref.IsBeatRouteAvailableinAttendance}------")
             //end Rev 11.0	AddAttendanceFragment AppV 4.1.3 Saheli    10/07/2023  0026539: log update in attendance module
             if (bList != null && bList.isNotEmpty()){
                 isBeatPresent = true
@@ -2277,7 +2277,7 @@ class AddAttendanceFragment : Fragment(), View.OnClickListener, DatePickerDialog
         (mContext as DashboardActivity).showSnackMessage("Attendance added successfully")
         (mContext as DashboardActivity).onBackPressed()*/
         //start Rev 11.0	AddAttendanceFragment AppV 4.1.3 Saheli    10/07/2023  0026539: log update in attendance module
-        Timber.d("------checkNetworkConnectivity------")
+       // Timber.d("------checkNetworkConnectivity------")
         //end Rev 11.0	AddAttendanceFragment AppV 4.1.3 Saheli    10/07/2023  0026539: log update in attendance module
         if (AppUtils.isOnline(mContext)) {
             if (BaseActivity.isApiInitiated)

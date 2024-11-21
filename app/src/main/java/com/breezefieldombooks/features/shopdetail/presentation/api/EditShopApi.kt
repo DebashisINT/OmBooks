@@ -14,6 +14,8 @@ import com.breezefieldombooks.features.contacts.ContactMasterRes
 import com.breezefieldombooks.features.contacts.SourceMasterRes
 import com.breezefieldombooks.features.contacts.StageMasterRes
 import com.breezefieldombooks.features.contacts.StatusMasterRes
+import com.breezefieldombooks.features.contacts.TargetLevelResponse
+import com.breezefieldombooks.features.contacts.TargetTypeResponse
 import com.breezefieldombooks.features.contacts.TypeMasterRes
 import com.breezefieldombooks.features.login.model.WhatsappApiData
 import com.breezefieldombooks.features.login.model.WhatsappApiFetchData
@@ -95,6 +97,14 @@ interface EditShopApi {
     @FormUrlEncoded
     @POST("SendAutoMail/SendAutoMailInfo")
     fun autoMailDtlsAPI(@Field("user_id") user_id: String): Observable<AutoMailDtls>
+
+    @FormUrlEncoded
+    @POST("TAInfoDetails/TargetTypeLists")
+    fun targetTypeAPI(@Field("user_id") user_id: String): Observable<TargetTypeResponse>
+
+    @FormUrlEncoded
+    @POST("TAInfoDetails/TargetLevelLists")
+    fun targetLevelAPI(@Field("user_id") user_id: String): Observable<TargetLevelResponse>
 
     /**
      * Companion object to create the GithubApiService

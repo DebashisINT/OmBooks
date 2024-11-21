@@ -11,6 +11,8 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -32,11 +34,17 @@ import com.breezefieldombooks.features.dashboard.presentation.DashboardActivity
 import com.breezefieldombooks.features.mylearning.apiCall.LMSRepoProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
-
+import com.google.android.exoplayer2.MediaItem
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
+import java.io.IOException
 
 class MyLearningFragment : BaseFragment(),OnClickListener {
     private lateinit var mContext: Context
@@ -82,6 +90,9 @@ class MyLearningFragment : BaseFragment(),OnClickListener {
     private lateinit var tv_frag_my_learning_last_content_prcntg: TextView
     private lateinit var tv_frag_my_learning_last_content_prcntg_status: TextView
 
+    private lateinit var webView: WebView
+
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
@@ -106,6 +117,8 @@ class MyLearningFragment : BaseFragment(),OnClickListener {
     }
 
     private fun initView(view: View) {
+
+
 
         //performance
         ll_lms_performance = view.findViewById(R.id.ll_lms_performance)
@@ -142,6 +155,9 @@ class MyLearningFragment : BaseFragment(),OnClickListener {
         tv_lms_mylearning.setTextColor(getResources().getColor(R.color.toolbar_lms))
         tv_lms_leaderboard.setTextColor(getResources().getColor(R.color.black))
         tv_lms_knowledgehub.setTextColor(getResources().getColor(R.color.black))
+
+        //webView = view.findViewById(R.id.vimeoWebView)
+       // setupWebView()
 
         cv_lms_learner_space = view.findViewById(R.id.cv_lms_learner_space)
         ll_lms_dash_performance_ins = view.findViewById(R.id.ll_lms_dash_performance_ins)
@@ -285,6 +301,19 @@ class MyLearningFragment : BaseFragment(),OnClickListener {
 
     }
 
+   /* private fun setupWebView() {
+        // Set WebViewClient to open links in WebView rather than external browser
+        webView.webViewClient = WebViewClient()
+
+        // Enable JavaScript
+        webView.settings.javaScriptEnabled = true
+
+        // Load the Vimeo embedded video URL
+        val videoId = "1024454916" // Replace with your actual Vimeo video ID
+        val embedUrl = "https://player.vimeo.com/video/$videoId"
+        webView.loadUrl(embedUrl)
+    }
+*/
     override fun onResume() {
         super.onResume()
         //code start for Notification count show from room db
@@ -652,6 +681,4 @@ class MyLearningFragment : BaseFragment(),OnClickListener {
     fun setHomeClickFalse(){
         CustomStatic.IsHomeClick = false
     }
-
-
 }

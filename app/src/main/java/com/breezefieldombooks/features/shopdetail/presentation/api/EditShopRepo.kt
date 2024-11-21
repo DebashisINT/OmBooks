@@ -22,6 +22,8 @@ import com.breezefieldombooks.features.contacts.ContactMasterRes
 import com.breezefieldombooks.features.contacts.SourceMasterRes
 import com.breezefieldombooks.features.contacts.StageMasterRes
 import com.breezefieldombooks.features.contacts.StatusMasterRes
+import com.breezefieldombooks.features.contacts.TargetLevelResponse
+import com.breezefieldombooks.features.contacts.TargetTypeResponse
 import com.breezefieldombooks.features.contacts.TypeMasterRes
 import com.breezefieldombooks.features.dashboard.presentation.DashboardActivity
 import com.breezefieldombooks.features.document.model.AddEditDocumentInputParams
@@ -242,6 +244,10 @@ class EditShopRepo(val apiService: EditShopApi) {
     }
 
 
-
-
+    fun targetType(user_id: String): Observable<TargetTypeResponse> {
+        return apiService.targetTypeAPI(user_id)
+    }
+    fun targetLevel(user_id: String): Observable<TargetLevelResponse> {
+        return apiService.targetLevelAPI(user_id)
+    }
 }
